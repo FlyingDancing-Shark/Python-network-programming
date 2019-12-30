@@ -17,7 +17,14 @@ test_port_range = []
 for i in range(0, 11):
 	port = random.randrange(0, 1024)
 	test_port_range.append(port)
+try:
+	for port_number in test_port_range:
+		print "Port: %s => service name: %s" %\
+			(port_number, socket.getservbyport(port_number))
+except socket.error, err_msg:
+	print 'Port Number Error:  %s' % (err_msg)
 
+	
 my_host_name = socket.gethostname()
 my_local_ipaddr = socket.gethostbyname(my_host_name)
 
