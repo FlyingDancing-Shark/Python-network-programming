@@ -12,3 +12,9 @@ test_readable_ip = ['192.168.0.1', '8.8.8.8', '255.255.255.0']
 test_server_name = 'www.facebook.com'
 test_server_name_2 = 'www.vmofeuowlskqa.com'
 
+my_host_name = socket.gethostname()
+my_local_ipaddr = socket.gethostbyname(my_host_name)
+
+print 'Host Name:   %s' % my_host_name
+print 'Local IP Address:    %s' % my_local_ipaddr
+
