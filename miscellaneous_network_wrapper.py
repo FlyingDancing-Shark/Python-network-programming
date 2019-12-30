@@ -31,3 +31,6 @@ for ipaddr in test_readable_ip:
 	
 	print 'IP: %s (length: %d bytes)  =====> (HEX notation) %s (length: %d bytes)'\
 		%(Unpacked_ipaddr, len(Unpacked_ipaddr), hexlify(Packed_ipaddr), len(Packed_ipaddr))
+
+	
+	
