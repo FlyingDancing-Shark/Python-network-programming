@@ -22,7 +22,7 @@ print 'Local IP Address:    %s' % my_local_ipaddr
 try:
 	print 'one IP address of Server %s:    %s' % (test_server_name, socket.gethostbyname(test_server_name))
 except socket.error, err_msg:
-	print 'error meassage from %s:  %s' % (test_server_name, err_msg)
+	print '%s:  %s' % (test_server_name, err_msg)
 
 
 for ipaddr in test_readable_ip:
