@@ -6,11 +6,17 @@ query time from NTP server.....
 '''
 
 import socket
+import random
 from binascii import hexlify
 
 test_readable_ip = ['192.168.0.1', '8.8.8.8', '255.255.255.0']
 test_server_name = 'www.facebook.com'
 test_server_name_2 = 'www.vmofeuowlskqa.com'
+test_port_range = []
+
+for i in range(0, 11):
+	port = random.randrange(0, 1024)
+	test_port_range.append(port)
 
 my_host_name = socket.gethostname()
 my_local_ipaddr = socket.gethostbyname(my_host_name)
@@ -32,5 +38,5 @@ for ipaddr in test_readable_ip:
 	print '\nIP: %s (length: %d bytes)  =====> (HEX notation) %s (length: %d bytes)'\
 		%(Unpacked_ipaddr, len(Unpacked_ipaddr), hexlify(Packed_ipaddr), len(Packed_ipaddr))
 
-	
+
 	
