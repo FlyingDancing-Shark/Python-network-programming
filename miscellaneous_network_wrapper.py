@@ -26,7 +26,7 @@ try:
 		print "Port: %s => service name: %s" %\
 			(port_number, socket.getservbyport(port_number))
 except socket.error, err_msg:
-	print 'Port Number Error:  %s' % (err_msg)
+	print '[**ERROR**]:  %s' % (err_msg)
 
 	
 my_host_name = socket.gethostname()
@@ -39,7 +39,7 @@ print 'Local IP Address:    %s' % my_local_ipaddr
 try:
 	print 'one IP address of Server %s:    %s' % (test_server_name, socket.gethostbyname(test_server_name))
 except socket.error, err_msg:
-	print '%s:  %s' % (test_server_name, err_msg)
+	print '[**ERROR**]%s:  %s' % (test_server_name, err_msg)
 
 
 for ipaddr in test_readable_ip:
