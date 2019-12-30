@@ -18,3 +18,6 @@ my_local_ipaddr = socket.gethostbyname(my_host_name)
 print 'Host Name:   %s' % my_host_name
 print 'Local IP Address:    %s' % my_local_ipaddr
 
+
+try:
+  
