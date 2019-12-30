@@ -40,7 +40,7 @@ try:
 	print 'one IP address of Server %s:    %s' % (test_server_name, socket.gethostbyname(test_server_name))
 	print 'one IP address of Server %s:    %s' % (test_server_name_2, socket.gethostbyname(test_server_name_2))
 except socket.error, err_msg:
-	print '[**ERROR**]%s:  %s' % (test_server_name, err_msg)
+	print '[**ERROR**]%s:  %s' % (test_server_name_2, err_msg)
 
 
 for ipaddr in test_readable_ip:
