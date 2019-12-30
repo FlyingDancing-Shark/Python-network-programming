@@ -25,4 +25,6 @@ except socket.err, err_msg:
 	print 'error meassage from %s:  %s' % (test_server_name, err_msg)
 
 
+for ipaddr in test_readable_ip:
+	Packed_ipaddr = socket.inet_aton(ipaddr)
 	
