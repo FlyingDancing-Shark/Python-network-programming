@@ -29,5 +29,5 @@ for ipaddr in test_readable_ip:
 	Packed_ipaddr = socket.inet_aton(ipaddr)
 	Unpacked_ipaddr = socket.inet_ntoa(Packed_ipaddr)
 	
-	print 'IP: %s (length: %d bytes)  =====> (hexadecimal notation) %s (length: %d bytes)'\
+	print 'IP: %s (length: %d bytes)  =====> (HEX notation) %s (length: %d bytes)'\
 		%(Unpacked_ipaddr, len(Unpacked_ipaddr), hexlify(Packed_ipaddr), len(Packed_ipaddr))
