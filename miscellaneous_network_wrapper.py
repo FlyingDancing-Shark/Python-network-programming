@@ -28,5 +28,6 @@ except socket.err, err_msg:
 for ipaddr in test_readable_ip:
 	Packed_ipaddr = socket.inet_aton(ipaddr)
 	Unpacked_ipaddr = socket.inet_ntoa(Packed_ipaddr)
-	print 'IP:  %s  =====> (hexadecimal notation) %s'\
-		%(Unpacked_ipaddr, hexlify(Packed_ipaddr)
+	
+	print 'IP: %s (length: %d bytes)  =====> (hexadecimal notation) %s (length: %d bytes)'\
+		%(len(Unpacked_ipaddr), Unpacked_ipaddr, hexlify(Packed_ipaddr), len(Packed_ipaddr))
