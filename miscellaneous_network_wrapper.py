@@ -15,12 +15,12 @@ test_server_name_2 = 'www.vmofeuowlskqa.com'
 my_host_name = socket.gethostname()
 my_local_ipaddr = socket.gethostbyname(my_host_name)
 
-print 'Host Name:   %s' % my_host_name
+print '\nHost Name:   %s' % my_host_name
 print 'Local IP Address:    %s' % my_local_ipaddr
 
 
 try:
-	print 'one IP address of Server:    %s' % socket.gethostbyname(test_server_name)
+	print 'one IP address of Server %s:    %s' % (test_server_name, socket.gethostbyname(test_server_name))
 except socket.err, err_msg:
 	print 'error meassage from %s:  %s' % (test_server_name, err_msg)
 
@@ -29,7 +29,7 @@ for ipaddr in test_readable_ip:
 	Packed_ipaddr = socket.inet_aton(ipaddr)
 	Unpacked_ipaddr = socket.inet_ntoa(Packed_ipaddr)
 	
-	print 'IP: %s (length: %d bytes)  =====> (HEX notation) %s (length: %d bytes)'\
+	print '\nIP: %s (length: %d bytes)  =====> (HEX notation) %s (length: %d bytes)'\
 		%(Unpacked_ipaddr, len(Unpacked_ipaddr), hexlify(Packed_ipaddr), len(Packed_ipaddr))
 
 	
