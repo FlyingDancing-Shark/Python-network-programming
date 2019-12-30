@@ -12,7 +12,10 @@ from binascii import hexlify
 test_readable_ip = ['192.168.0.1', '8.8.8.8', '255.255.255.0']
 test_server_name = 'www.facebook.com'
 test_server_name_2 = 'www.vmofeuowlskqa.com'
-test_port_range = [22, 25, 43, 69, 80, 123, 137, 138, 139, 443, 3306, 3389]
+
+# 3306 is the default port of MySQL, but it wouldn't be recognized by Python 
+# "socket.getservbyport()" method.
+test_port_range = [22, 25, 43, 69, 80, 123, 137, 138, 139, 443, 3389, 3306]
 """
 for i in range(0, 11):
 	port = random.randrange(0, 1024)
