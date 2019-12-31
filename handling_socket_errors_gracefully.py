@@ -20,6 +20,9 @@ def main():
 	port = given_args.port
 	filename = given_args.file
 	
+	# we can alternatively wrap all these four "try-except" blocks into one,  
+	# and repeatedly wait user input then send it to server, 
+	# see another version "single_error_handling_of_socket.py"
 	try:
 		client_S = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	except socket.error, err:
@@ -52,7 +55,8 @@ def main():
 			break
 		
 		sys.stdout.write(buffer)
-
+		
+	
 main()
 	
 	
