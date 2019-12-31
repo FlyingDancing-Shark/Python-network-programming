@@ -27,6 +27,9 @@ def main():
 	# see another version "single_error_handling_of_socket.py"
 	try:
 		client_S = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		receive_buffer_size = sock.getsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF)
+		print "Receive Buffer Size:  %d" % receive_buffer_size
+		
 		# client_S.settimeout(time_out)
 	except socket.error, err:
 		print "Fail to create socket:  %s" % err
