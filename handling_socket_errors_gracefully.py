@@ -28,11 +28,14 @@ def main():
 	try:
 		client_S = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		
+		client_S.setsockopt(socket.SOL_TCP, socket.TCP_NODELAY, 1)
 		receive_buffer_size = client_S.getsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF)
 		print "Receive Buffer Size:  %d" % receive_buffer_size
+		
 		client_S.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 65536)
-		receive_buffer_size = client_S.getsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF)
-		print "Receive Buffer Size[adjustment]:  %d" % receive_buffer_size
+		receive_buffer_size_after = client_S.getsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF)
+		print "Receive Buffer Size[adjustment]:  %d" % receive_buffer_size_after
+		
 		# client_S.settimeout(time_out)
 	except socket.error, err:
 		print "Fail to create socket:  %s" % err
