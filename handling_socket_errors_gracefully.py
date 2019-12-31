@@ -47,6 +47,7 @@ def main():
 		except socket.error, err:
 			print "Fail to receiving data:  %s" % err
 			sys.exit(1)
+			
 		if not len(buffer):
 			break
 		
