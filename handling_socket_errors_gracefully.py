@@ -64,7 +64,7 @@ def main():
 		
 	while True:
 		try:
-			buffer = client_S.recv(2048)
+			buffer = client_S.recv(4096)
 		except socket.error, err:
 			print "Fail to receiving data:  %s" % err
 			sys.exit(1)
