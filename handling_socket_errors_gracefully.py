@@ -32,6 +32,11 @@ def main():
 	# by default, this will block our Python program until OS establish a connection
 	# with remote server, we can set timeout (blocking until our specified time) 
 	# then handling "socket.timeout" exception
+	#
+	# timeout are used with blocking-socket, and it effects all kind of blocking operation, 
+	# such as connected(), recv();
+        # for non-blocking socket once calls to these blocking operation, it return immediately, 
+	# so it has no concept of timeout 
 	try:
 		client_S.connect((host, port))
 	except socket.gaierror, err:
