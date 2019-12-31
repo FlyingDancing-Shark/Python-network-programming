@@ -6,7 +6,7 @@ query time from NTP server.....
 '''
 
 import socket
-import random
+# import random
 from binascii import hexlify
 
 test_readable_ip = ['192.168.0.1', '8.8.8.8', '255.255.255.0']
