@@ -35,4 +35,23 @@ def main():
 		print "Fail to connecting to server:  %s" % err
 		sys.exit(1)
 		
+	try:
+		client_S.sendall("GET %s HTTP/1.0\r\n\r\n" % filename)
+	except socket.error, err:
+		print "Fail to sending data:  %s" % err
+		sys.exit(1)
+		
+	while True:
+		try:
+			buffer = client_S.recv(2048)
+		except socket.error, err:
+			print "Fail to receiving data:  %s" % err
+			sys.exit(1)
+		if not len(buffer):
+			break
+		
+		sys.stdout.write(buffer)
+
+main()
+	
 	
