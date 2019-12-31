@@ -13,12 +13,12 @@ def main():
 	parser = argparse.ArgumentParser(description='Elegant Socket Error Handling')
 	parser.add_argument('--host', action="store", dest="host", required=False)
 	parser.add_argument('--port', action="store", dest="port", type=int, required=False)
-	parser.add_argument('--file', action="store", dest="file", required=False)
+	parser.add_argument('--remotefile', action="store", dest="remotefile", required=False)
 	given_args = parser.parse_args()
 	
 	host = given_args.host
 	port = given_args.port
-	filename = given_args.file
+	remotefile = given_args.remotefile
 	
 	# we can alternatively wrap all these four "try-except" blocks into one,  
 	# and repeatedly wait user input then send it to server, 
@@ -39,7 +39,7 @@ def main():
 		sys.exit(1)
 		
 	try:
-		client_S.sendall("GET %s HTTP/1.0\r\n\r\n" % filename)
+		client_S.sendall("GET %s HTTP/1.0\r\n\r\n" % remotefile)
 	except socket.error, err:
 		print "Fail to sending data:  %s" % err
 		sys.exit(1)
