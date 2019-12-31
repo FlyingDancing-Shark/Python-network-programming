@@ -20,12 +20,14 @@ def main():
 	port = given_args.port
 	# remotefile = given_args.remotefile
 	
+	time_out = 5
+	
 	# we can alternatively wrap all these four "try-except" blocks into one,  
 	# and repeatedly wait user input then send it to server, 
 	# see another version "single_error_handling_of_socket.py"
 	try:
 		client_S = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		client_S.settimeout(5)
+		client_S.settimeout(time_out)
 	except socket.error, err:
 		print "Fail to create socket:  %s" % err
 		sys.exit(1)
@@ -45,6 +47,9 @@ def main():
 		sys.exit(1)
 	except socket.error, err:
 		print "Fail to connecting to server:  %s" % err
+		sys.exit(1)
+	except socket.timeout, err:
+		print "Treminate process duo to:  %s after %d seconds" % (err, time_out)
 		sys.exit(1)
 		
 	try:
