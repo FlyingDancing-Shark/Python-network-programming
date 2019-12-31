@@ -29,6 +29,9 @@ def main():
 		print "Fail to create socket:  %s" % err
 		sys.exit(1)
 	
+	# by default, this will block our Python program until OS establish a connection
+	# with remote server, we can set timeout (blocking until our specified time) 
+	# then handling "socket.timeout" exception
 	try:
 		client_S.connect((host, port))
 	except socket.gaierror, err:
