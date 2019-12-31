@@ -40,17 +40,19 @@ def main():
 	# such as connected(), recv();
         # for non-blocking socket once calls to these blocking operation, it return immediately, 
 	# so it has no concept of timeout 
+	
 	try:
 		client_S.connect((host, port))
+	except socket.timeout, err:
+		print "Treminate process duo to:  %s after %d seconds" % (err, time_out)
+		sys.exit(1)	
 	except socket.gaierror, err:
 		print "Address-related problem occur when connect to server:  %s" % err
 		sys.exit(1)
 	except socket.error, err:
 		print "Fail to connecting to server:  %s" % err
 		sys.exit(1)
-	except socket.timeout, err:
-		print "Treminate process duo to:  %s after %d seconds" % (err, time_out)
-		sys.exit(1)
+
 		
 	try:
 		client_S.sendall("GET HTTP/1.0\r\n\r\n")
