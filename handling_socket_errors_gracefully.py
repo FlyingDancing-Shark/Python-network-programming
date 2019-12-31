@@ -25,6 +25,7 @@ def main():
 	# see another version "single_error_handling_of_socket.py"
 	try:
 		client_S = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		client_S.settimeout(5)
 	except socket.error, err:
 		print "Fail to create socket:  %s" % err
 		sys.exit(1)
