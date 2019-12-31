@@ -55,7 +55,9 @@ def main():
 
 		
 	try:
-		client_S.sendall("GET HTTP/1.0\r\n\r\n")
+		# the minimum requirement of a valid HTTP 1.0 GET request that doesn't 
+		# render most servers to return 400 bad request.
+		client_S.sendall("GET / HTTP/1.0\r\n\r\n")
 	except socket.error, err:
 		print "Fail to sending data:  %s" % err
 		sys.exit(1)
