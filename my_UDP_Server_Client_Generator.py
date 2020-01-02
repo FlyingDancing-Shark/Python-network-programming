@@ -66,7 +66,7 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 	while True:
 		time.sleep(3)
 		s.send('--------This is another client message--------') 
-		print '\n\t--------Waiting up to', local_delay, 'seconds for a reply--------'
+		print '\n\t--------Waiting up to', local_delay, 'seconds for a reply, the', resend, 'th resend--------'
 		s.settimeout(local_delay)
 		# s.settimeout(internet_delay)
 		
