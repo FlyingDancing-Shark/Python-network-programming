@@ -48,7 +48,7 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 			# adjust client reliability code correspondingly
 			# this will pause arbitrary seconds, then keep receive data from client
 			# if not random.randint(0, 1):
-				# time.sleep(random.randint(5, 15)) 
+				# time.sleep(round(random.uniform(0.04, 0.20), 2)) 
 
 # running at client mode
 elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
@@ -58,11 +58,13 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 	s.connect((hostname, PORT))
 	print '\n\t--------Client socket name is--------', s.getsockname()
 	
-	# 
+	# 10 milliseconds
 	local_delay = 0.01
 	# internet_delay = 0.3
+	# retry = 0
 	
 	while True:
+		# retry += 1
 		s.send('--------This is another client message--------') 
 		print '\n\t--------Waiting up to', local_delay, 'seconds for a reply--------'
 		s.settimeout(local_delay)
@@ -72,8 +74,10 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 			data = s.recv(MAX_RECV)
 		except socket.timeout:
 			local_delay *= 2
-			if local_delay > 0.08:
-				# local_delay = 0.08
+			
+			# retry > 6, stop increase waiting time or terminate process
+			if local_delay > 0.16:
+				# local_delay = 0.16
 				
 				raise RuntimeError('\n\t--------I think the server is down--------')
 		except socket.error, err:
@@ -83,6 +87,9 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 		# if server reply before current timeout value, exit loop, 
 		# print message receiving from server	
 		else:
+			# if retry <= 3:
+				# local_delay = 0.01
+			# retry = 0
 			break
 	
 	# if we put this print into "else" block, and comment "break“，then we can test 
