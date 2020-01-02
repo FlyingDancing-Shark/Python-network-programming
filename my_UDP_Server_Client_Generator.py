@@ -76,12 +76,17 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 				# local_delay = 0.08
 				
 				raise RuntimeError('\n\t--------I think the server is down--------')
-		except:
-			raise
-		# 	
+		except socket.error, err:
+			print "\n\t-----Fail to receiving data:  %s-----" % err
+			sys.exit(1) 
+			
+		# if server reply before current timeout value, exit loop, 
+		# print message receiving from server	
 		else:
 			break
-			
+	
+	# if we put this print into "else" block, and comment "break“，then we can test 
+	# along with "time.sleep(random.randint(5, 15))"
 	print '\n\tThe server says: ', repr(data)
 
 else:
