@@ -16,7 +16,7 @@ PORT = 1060
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 # running at server mode
-# for example ：
+# for example:
 # python my_UDP_Server_Client_Generator.py server 
 # argv[0] = my_UDP_Server_Client_Generator.py
 # argv[1] = server 
