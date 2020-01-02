@@ -81,7 +81,7 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 				local_delay = 0.16
 				stay_under_max_delay += 1
 				if stay_under_max_delay > 3:
-					raise RuntimeError('\n\t--------I think the server is down--------')
+					raise RuntimeError('\n\t--------I think the server is down, after', resend, 'th resend------')
 		     	resend += 1
 			
 				# raise RuntimeError('\n\t--------I think the server is down--------')
