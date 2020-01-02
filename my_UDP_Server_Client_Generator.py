@@ -64,7 +64,7 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 	stay_under_max_delay = 0
 	
 	while True:
-		# time.sleep(5)
+		time.sleep(3)
 		s.send('--------This is another client message--------') 
 		print '\n\t--------Waiting up to', local_delay, 'seconds for a reply--------'
 		s.settimeout(local_delay)
