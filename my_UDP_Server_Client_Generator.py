@@ -47,7 +47,7 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 			# pause server for a period of time to simulate it is down entirely, 
 			# adjust client reliability code correspondingly
 			# this will pause arbitrary seconds, then keep receive data from client
-			# time.sleep(round(random.uniform(0.01, 0.20), 2)) 
+			time.sleep(round(random.uniform(0.01, 0.20), 2)) 
 
 # running at client mode
 elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
@@ -60,11 +60,11 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 	# 10 milliseconds
 	local_delay = 0.01
 	# internet_delay = 0.3
-	# resend = 0
-	# stay_under_max_delay = 0
+	resend = 0
+	stay_under_max_delay = 0
 	
 	while True:
-		
+		# time.sleep(5)
 		s.send('--------This is another client message--------') 
 		print '\n\t--------Waiting up to', local_delay, 'seconds for a reply--------'
 		s.settimeout(local_delay)
@@ -78,13 +78,13 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 			# if we resend over four times, stop increase waiting time or 
 			# terminate process
 			if local_delay > 0.16:
-				# local_delay = 0.16
-				# stay_under_max_delay += 1
-				# if stay_under_max_delay > 10:
-					# raise RuntimeError('\n\t--------I think the server is down--------'
-		      # resend += 1
+				local_delay = 0.16
+				stay_under_max_delay += 1
+				if stay_under_max_delay > 3:
+					raise RuntimeError('\n\t--------I think the server is down--------')
+		     	resend += 1
 			
-				raise RuntimeError('\n\t--------I think the server is down--------')
+				# raise RuntimeError('\n\t--------I think the server is down--------')
 		except socket.error, err:
 			print "\n\t-----Fail to receiving data:  %s-----" % err
 			sys.exit(1) 
@@ -92,15 +92,16 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 		# if server reply before current timeout value, exit loop, 
 		# print message receiving from server	
 		else:
-			# if resend <= 3:
-				# local_delay = 0.01
-			# resend = 0
-			# stay_under_max_delay = 0
-			break
-	
+			if resend <= 3:
+				local_delay = 0.01
+			resend = 0
+			stay_under_max_delay = 0
+			# break
+			print '\n\tThe server says: ', repr(data)
+			
 	# if we put this print into "else" block, and comment "break", then we can test 
 	# along with "time.sleep(random.randint(5, 15))"
-	print '\n\tThe server says: ', repr(data)
+	# print '\n\tThe server says: ', repr(data)
 
 else:
     print >>sys.stderr, '\n\tusage:-------my_UDP_Server_Client_Generator.py server [ <interface> ]'
