@@ -98,7 +98,7 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 			# stay_under_max_delay = 0
 			break
 	
-	# if we put this print into "else" block, and comment "break“，then we can test 
+	# if we put this print into "else" block, and comment "break", then we can test 
 	# along with "time.sleep(random.randint(5, 15))"
 	print '\n\tThe server says: ', repr(data)
 
