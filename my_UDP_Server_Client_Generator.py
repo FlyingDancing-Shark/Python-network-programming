@@ -47,7 +47,8 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 			# pause server for a period of time to simulate it is down entirely, 
 			# adjust client reliability code correspondingly
 			# this will pause arbitrary seconds, then keep receive data from client
-			time.sleep(round(random.uniform(0.01, 0.20), 2)) 
+			time.sleep(8)
+			# time.sleep(round(random.uniform(0.01, 0.20), 2)) 
 
 # running at client mode
 elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
@@ -81,7 +82,9 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 				local_delay = 0.16
 				stay_under_max_delay += 1
 				if stay_under_max_delay > 3:
-					raise RuntimeError('\n\t--------I think the server is down, after', resend, 'th resend------')
+					print "I think the server is down after %dth resend -_-!" % resend
+					sys.exit(1)
+					# raise RuntimeError('\n\t--------I think the server is down, after', resend, 'th resend------')
 		     	resend += 1
 			
 				# raise RuntimeError('\n\t--------I think the server is down--------')
