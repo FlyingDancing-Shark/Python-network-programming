@@ -65,7 +65,7 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 	stay_under_max_delay = 0
 	
 	while True:
-		time.sleep(3)
+		time.sleep(2)
 		s.send('--------This is another client message--------') 
 		print '\n\t--------Waiting up to', local_delay, 'seconds for a reply, the', resend, 'th resend--------'
 		s.settimeout(local_delay)
@@ -82,7 +82,7 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 				local_delay = 0.16
 				stay_under_max_delay += 1
 				if stay_under_max_delay > 3:
-					print "I think the server is down after %dth resend -_-!" % resend
+					print "-----------I think the server is down after %dth resend -_-!" % resend
 					sys.exit(1)
 					# raise RuntimeError('\n\t--------I think the server is down, after', resend, 'th resend------')
 		     	resend += 1
