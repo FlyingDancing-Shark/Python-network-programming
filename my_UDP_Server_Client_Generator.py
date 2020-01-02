@@ -94,6 +94,7 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 		else:
 			if resend <= 3:
 				local_delay = 0.01
+				print '\n\tGet reply before %d retries, now reset timeout to %.2f: ', (resend, local_delay) 
 			resend = 0
 			stay_under_max_delay = 0
 			# break
