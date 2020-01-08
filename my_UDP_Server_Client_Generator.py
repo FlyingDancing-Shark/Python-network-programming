@@ -33,12 +33,14 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 	
 	while True:
 		# keep receive data from client
+		# here, "address" is a tuple like such----- ('192.168.3.113', 58713)
 		data, address = s.recvfrom(MAX_RECV)
 		
-		print 'type of remote host IP: %s' % type(address)
-		print 'type of remote host data: %s' % type(data)
-		
-		
+		# so we only check the 'IP' element in this tuple 
+		if address[0] not in valid_host_candidate:
+			print '\n\t---receive data from a suspicious host,  exit ----'
+			sys.exit(2)
+				
 		# 
 		if random.randint(0, 1):
 			print '\n\tThe client at', address, 'says:', repr(data)
