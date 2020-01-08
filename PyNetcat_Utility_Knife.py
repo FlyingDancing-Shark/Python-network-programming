@@ -6,3 +6,15 @@ I plan to add some more robust features in the future,such as disable OS firewal
 terminate anti-virus process.....
 '''
 
+import sys
+import socket
+import getopt
+import threading
+import subprocess
+
+# these global used to record command-line option specified by users
+listen			= False
+command			= False
+upload			= False
+execute			= ""
+
