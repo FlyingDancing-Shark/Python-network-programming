@@ -64,7 +64,7 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 	hostname = sys.argv[2]
 	s.connect((hostname, PORT))
 	print '\n\t--------Client socket name is--------', s.getsockname()
-	print '\n\t--------the address to which we connected to is: --------', s.getpeername()
+	print '\n\t--------the PEER to which we connected to is: --------', s.getpeername()
 	# 10 milliseconds
 	local_delay = 0.01
 	# internet_delay = 0.3
