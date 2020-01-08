@@ -101,7 +101,7 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 		
 		except KeyboardInterrupt:
 			print '\n\t--- handle user request for exiting ----'
-			sys.exit(2) 
+			sys.exit(0) 
 		# if server reply before current timeout value, exit loop, 
 		# print message receiving from server	
 		else:
