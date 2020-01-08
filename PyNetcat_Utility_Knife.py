@@ -17,4 +17,5 @@ listen			= False
 command			= False
 upload			= False
 execute			= ""
+PyNetCat_server = ""
 
