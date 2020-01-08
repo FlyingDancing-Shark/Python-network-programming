@@ -13,6 +13,8 @@ MAX_RECV = 65535
 # to listen on this port need administrator privileges in UNIX-like system 
 PORT = 1060
 
+valid_host_candidate = ['127.0.0.1', '192.168.3.113']
+
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 # running at server mode
@@ -32,6 +34,10 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 	while True:
 		# keep receive data from client
 		data, address = s.recvfrom(MAX_RECV)
+		
+		print 'type of remote host IP: %s' % type(address)
+		print 'type of remote host data: %s' % type(data)
+		
 		
 		# 
 		if random.randint(0, 1):
