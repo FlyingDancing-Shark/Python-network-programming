@@ -13,7 +13,7 @@ MAX_RECV = 65535
 # to listen on this port need administrator privileges in UNIX-like system 
 PORT = 1060
 
-valid_host_candidate = ['127.0.0.1', '192.168.3.113']
+allowed_IPs_white_list = ['127.0.0.1', '192.168.3.113']
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -37,7 +37,7 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 		data, address = s.recvfrom(MAX_RECV)
 		
 		# so we only perform security check against the 'IP' element in this tuple 
-		if address[0] not in valid_host_candidate:
+		if address[0] not in allowed_IPs_white_list:
 			print '\n\t---receive data from a suspicious host,  exit ----'
 			sys.exit(2)
 				
@@ -64,7 +64,7 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 	hostname = sys.argv[2]
 	s.connect((hostname, PORT))
 	print '\n\t--------Client socket name is--------', s.getsockname()
-	
+	print '\n\t--------the address to which we connected to is: --------', s.getpeername()
 	# 10 milliseconds
 	local_delay = 0.01
 	# internet_delay = 0.3
@@ -98,7 +98,10 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 		except socket.error, err:
 			print "\n\t-----Fail to receiving data:  %s-----" % err
 			sys.exit(1) 
-			
+		
+		except KeyboardInterrupt:
+			print '\n\t--- handle user request for exiting ----'
+			sys.exit(0) 
 		# if server reply before current timeout value, exit loop, 
 		# print message receiving from server	
 		else:
