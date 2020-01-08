@@ -20,3 +20,8 @@ execute			    = ""
 PyNetCat_server = ""
 upload_file_path = ""
 port            = 0
+
+
+def usage():
+	print "[*********] NetCat rewrite with Python [**************]"
+  	
