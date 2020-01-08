@@ -23,5 +23,11 @@ port            = 0
 
 
 def usage():
-	print "[*********] NetCat rewrite with Python [**************]"
+	
   	
+
+def main():
+	
+	
+	print "[*********] NetCat rewrite with Python [**************]"
+	
