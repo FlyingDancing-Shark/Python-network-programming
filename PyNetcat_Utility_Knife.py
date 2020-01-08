@@ -13,9 +13,10 @@ import threading
 import subprocess
 
 # these global used to record command-line option specified by users
-listen			= False
-command			= False
-upload			= False
-execute			= ""
+listen			    = False
+command			    = False
+upload			    = False
+execute			    = ""
 PyNetCat_server = ""
-
+upload_file_path = ""
+port            = 0
