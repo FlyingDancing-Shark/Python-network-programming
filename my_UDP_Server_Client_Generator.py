@@ -36,7 +36,7 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 		# here, "address" is a tuple like such----- ('192.168.3.113', 58713)
 		data, address = s.recvfrom(MAX_RECV)
 		
-		# so we only check the 'IP' element in this tuple 
+		# so we only perform security check against the 'IP' element in this tuple 
 		if address[0] not in valid_host_candidate:
 			print '\n\t---receive data from a suspicious host,  exit ----'
 			sys.exit(2)
