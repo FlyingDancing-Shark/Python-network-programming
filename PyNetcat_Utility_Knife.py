@@ -77,7 +77,7 @@ def main():
 			print_usage()
 		elif o in ("-l", "--listen"):
 			listen  = True
-		elif o in ("-e", "--execute")"
+		elif o in ("-e", "--execute"):
 			execute = a
 		elif o in ("-c", "--commandshell"):
 			cmd_shell = True
