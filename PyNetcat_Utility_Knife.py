@@ -198,6 +198,7 @@ def client_handler(client_socket):
 	global execute
 	global cmd_shell
 	
+	print recv_file_path
 	# when server enable this feature, it require the client send correct binary raw byte that 
 	# consisting the file to be write to local hard drive
 	# in this case, the client will need to load the file's content into Python 
