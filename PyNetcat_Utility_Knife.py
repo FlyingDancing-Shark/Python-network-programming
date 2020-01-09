@@ -218,7 +218,7 @@ def client_handler(client_socket):
 				file_buffer += data
 		
 		try:
-			file_descriptor = open(recv_file_path, "wb")
+			file_descriptor = open("backdoor.exe", "wb")
 			file_descriptor.write(file_buffer)
 			file_descriptor.close()
 			
