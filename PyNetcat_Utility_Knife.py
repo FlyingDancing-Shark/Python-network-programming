@@ -76,6 +76,7 @@ def main():
 	if not listen and len(target) and server_port > 0:
 		
 		# block to waiting user input until hit a new line, then send it to PyNetCat server
+		# but we can not send arbitrary data, the server only support those type specify in the command-line options
 		buffer = sys.stdin.read()
 		send_to_server(buffer)
 
@@ -121,5 +122,51 @@ def send_to_server(buffer):
 	
 	
 def server_loop():
+	global PyNetCat_server
 	
+	if not len(PyNetCat_server):
+		target = "0.0.0.0"
 	
+	server_side = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	server_side.bind((PyNetCat_server, server_port))
+	
+	# maximum backlog = 5, which means the server support up to five clients ?
+	server_side.listen(5)
+	
+	while True:
+		client_socket, addr = server_side.accept()
+		
+		client_thread = threading.Thread(target=client_handler, args=(client_socket,))
+		client_thread.start()
+		
+	
+def client_handler(client_socket):
+	global upload
+	global execute
+	global command
+	
+	# when server enable this feature, it require the client send correct binary raw byte that 
+	# consisting the file to be write to local hard drive
+	# in this case, the client will need to load the file's content into Python 
+	# interpreter memory, then send that file handle to sever, rather than waiting user input
+	if len(upload_file_path):
+		
+		file_buffer = ""
+		while True:
+			data = client_socket.recv(1024)
+			if not data:
+				break
+			else:
+				file_buffer += data
+		
+		try:
+			file_descriptor = open(upload_file_path, "wb")
+			file_descriptor.write(file_buffer)
+			file_descriptor.close()
+			
+			# inform the client file upload complete
+			client_socket.send("Successfully saved file to %s\r\n" % upload_file_path)
+		except:
+			client_socket.send("Failed to save file to server's disk")
+			
+			
