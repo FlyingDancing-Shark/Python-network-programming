@@ -22,6 +22,7 @@ send_file_path	 	= ""
 recv_file_path		= ""
 server_port         	= 0
 
+main()
 
 def print_usage():
 	
@@ -119,7 +120,6 @@ def main():
 	if listen:
 		server_loop()
 	
-main()		
 
 
 def send_to_server(buffer):
