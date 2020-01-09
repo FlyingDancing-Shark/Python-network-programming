@@ -105,7 +105,7 @@ def main():
 		client_side = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		client_side.connect((PyNetCat_server, server_port))
 		print send_file_path
-		file_handle = open("calc.exe", "rb")
+		file_handle = open(send_file_path, "rb")
 		data_chunk = file_handle.read(1024)
 		
 		while data_chunk:
