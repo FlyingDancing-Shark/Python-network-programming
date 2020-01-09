@@ -112,8 +112,8 @@ def main():
 			data_chunk = file_handle.read(1024)
 		print "success!"
 		file_handle.close()
-		client_side.shutdown(socket.SHUT_WR)
-		client_side.close()
+		# client_side.shutdown(socket.SHUT_WR)
+		# client_side.close()
 		
 		
 	if listen:
