@@ -93,14 +93,14 @@ def main():
 			assert False, "Fail To Parsing Option, please check your typo"
 			
 	# running an PyNetCat client mode
-	if not listen and len(target) and server_port > 0 and not len(send_file_path):
+	if not listen and len(PyNetCat_server) and server_port > 0 and not len(send_file_path):
 		
 		# block to waiting user input until hit a new line, then send it to PyNetCat server
 		# but we can not send arbitrary data, the server only support those type specify in the command-line options
 		buffer = sys.stdin.read()
 		send_to_server(buffer)
 	
-	if not listen and len(target) and server_port > 0 and len(send_file_path):
+	if not listen and len(PyNetCat_server) and server_port > 0 and len(send_file_path):
 		
 		client_side = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		client_side.connect((PyNetCat_server, server_port))
