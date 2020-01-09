@@ -18,8 +18,9 @@ cmd_shell		    = False
 upload			    = False
 execute			    = ""
 PyNetCat_server 	= ""
-upload_file_path 	= ""
-server_port         = 0
+send_file_path	 	= ""
+recv_file_path		= ""
+server_port         	= 0
 
 
 def print_usage():
@@ -28,13 +29,15 @@ def print_usage():
 	print "-l --listen - listen on [host]:[port] for incoming connections"
  	print "-e --execute=file_to_run - execute the given file upon receiving a connection"
  	print "-c --command - initialize a command shell"
- 	print "-u --upload=destination - upon receiving connection upload a file and write to [destination]"
+ 	print "-s --sendfilepath=destination - upon receiving connection upload a file and write to [destination]"
+	print "-r --recvfilepath=destination - upon receiving connection upload a file and write to [destination]"
  	print
  	print
  	print "Examples: "
- 	print "PyNetcat_Utility_Knife.py -t 192.168.0.1 -p 5555 -l -c"
- 	print "PyNetcat_Utility_Knife.py -t 192.168.0.1 -p 5555 -l -u=c:\\target.exe"
- 	print "PyNetcat_Utility_Knife.py -t 192.168.0.1 -p 5555 -l -e=\"cat /etc/passwd\""
+ 	print "PyNetcat_Utility_Knife.py -t 192.168.0.1 -p 1060 -l -c"
+	print "PyNetcat_Utility_Knife.py -t 192.168.3.1 -p 1060    -s=c:\\some_file.exe"
+ 	print "PyNetcat_Utility_Knife.py -t 192.168.3.1 -p 1060 -l -r=c:\\backdoor.exe"
+	print "PyNetcat_Utility_Knife.py -t 192.168.0.1 -p 1060 -l -e=\"cat /etc/passwd\""
  	print "echo 'ABCDEFGHI' | ./PyNetcat_Utility_Knife.py -t 192.168.11.12 -p 135"
 
   	sys.exit(0)
@@ -46,7 +49,8 @@ def main():
 	global server_port
 	global execute
 	global cmd_shell
-	global upload_file_path
+	global send_file_path
+	global recv_file_path
 	global PyNetCat_server
 	
 	print "[*********] NetCat rewrite with Python [**************]"
@@ -59,7 +63,7 @@ def main():
 	
 	try:
 		opts, args = getopt.getopt(sys.argv[1:], "hle:P:p:cu",\
-			["help", "listen", "execute", "target", "port", "command", "upload"])
+			["help", "listen", "execute", "target", "port", "commandshell", "sendfilepath", "recvfilepath"])
 	except getopt.GetoptError as err:
 		print str(err)
 		print_usage()
@@ -77,8 +81,10 @@ def main():
 			execute = a
 		elif o in ("-c", "--commandshell"):
 			cmd_shell = True
-		elif o in ("-u", "--upload"):
-			upload_file_path = a
+		elif o in ("-s", "--sendfilepath"):
+			send_file_path = a
+		elif o in ("-r", "--recvfilepath"):
+			recv_file_path = a
 		elif o in ("-t", "--target"):
 			PyNetCat_server = a
 		elif o in ("-p", "--port"):
@@ -87,13 +93,29 @@ def main():
 			assert False, "Fail To Parsing Option, please check your typo"
 			
 	# running an PyNetCat client mode
-	if not listen and len(target) and server_port > 0:
+	if not listen and len(target) and server_port > 0 and not len(send_file_path):
 		
 		# block to waiting user input until hit a new line, then send it to PyNetCat server
 		# but we can not send arbitrary data, the server only support those type specify in the command-line options
 		buffer = sys.stdin.read()
 		send_to_server(buffer)
-
+	
+	if not listen and len(target) and server_port > 0 and len(send_file_path):
+		
+		client_side = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		client_side.connect((PyNetCat_server, server_port))
+		file_handle = open("send_file_path", "rb")
+		data_chunk = file_handle.read(1024)
+		
+		while data_chunk:
+			client_side.send(data_chunk)
+			data_chunk = file_handle.read(1024)
+		
+		file_handle.close()
+		client_side.shutdown(socket.SHUT_WR)
+		client_side.close()
+		
+		
 	if listen:
 		server_loop()
 	
@@ -181,7 +203,7 @@ def client_handler(client_socket):
 	# consisting the file to be write to local hard drive
 	# in this case, the client will need to load the file's content into Python 
 	# interpreter memory, then send that file handle to sever, rather than waiting user input
-	if len(upload_file_path):
+	if len(recv_file_path):
 		
 		file_buffer = ""
 		while True:
@@ -192,7 +214,7 @@ def client_handler(client_socket):
 				file_buffer += data
 		
 		try:
-			file_descriptor = open(upload_file_path, "wb")
+			file_descriptor = open(recv_file_path, "wb")
 			file_descriptor.write(file_buffer)
 			file_descriptor.close()
 			
@@ -225,8 +247,6 @@ def client_handler(client_socket):
 			
 			response = run_command(cmd_buffer)
 			client_socket.send(response)
-
-
-			
 		
+
 		
