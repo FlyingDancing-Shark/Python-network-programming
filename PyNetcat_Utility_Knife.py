@@ -104,7 +104,7 @@ def main():
 		
 		client_side = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		client_side.connect((PyNetCat_server, server_port))
-		file_handle = open("calc.exe", "rb")
+		file_handle = open(send_file_path, "rb")
 		data_chunk = file_handle.read(1024)
 		
 		while data_chunk:
@@ -112,6 +112,8 @@ def main():
 			data_chunk = file_handle.read(1024)
 		print "success!"
 		file_handle.close()
+		sever_ACK = client_side.recv(1024)
+		print sever_ACK
 		# client_side.shutdown(socket.SHUT_WR)
 		# client_side.close()
 		
@@ -215,12 +217,12 @@ def client_handler(client_socket):
 				file_buffer += data
 		
 		try:
-			file_descriptor = open("backdoor.exe", "wb")
+			file_descriptor = open("recv_file_path", "wb")
 			file_descriptor.write(file_buffer)
 			file_descriptor.close()
 			
 			# inform the client file upload complete
-			client_socket.send("Successfully saved file to %s\r\n" % upload_file_path)
+			client_socket.send("Successfully saved file to %s\r\n" % recv_file_path)
 		except:
 			client_socket.send("Failed to save file to server's disk")
 	
