@@ -167,13 +167,13 @@ def server_loop():
 	
 	# maximum backlog = 5, which means the server support up to five clients ?
 	server_side.listen(5)
-	
+	print "before accept"
 	while True:
 		client_socket, addr = server_side.accept()
-		
+		print "after accept"
 		client_thread = threading.Thread(target=client_handler, args=(client_socket,))
 		client_thread.start()
-		
+		print "after thread start"
 
 def run_command(command):
 	
