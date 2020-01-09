@@ -22,7 +22,6 @@ send_file_path	 	= ""
 recv_file_path		= ""
 server_port         	= 0
 
-main()
 
 def print_usage():
 	
@@ -249,4 +248,4 @@ def client_handler(client_socket):
 			client_socket.send(response)
 		
 
-		
+main()		
