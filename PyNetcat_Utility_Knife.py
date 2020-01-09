@@ -17,9 +17,9 @@ listen			    = False
 command			    = False
 upload			    = False
 execute			    = ""
-PyNetCat_server = ""
-upload_file_path = ""
-port            = 0
+PyNetCat_server 	= ""
+upload_file_path 	= ""
+server_port         = 0
 
 
 def print_usage():
@@ -30,7 +30,7 @@ def print_usage():
 def main():
 	
 	global listen
-	global port
+	global server_port
 	global execute
 	global command
 	global upload_file_path
@@ -66,15 +66,55 @@ def main():
 		elif o in ("-u", "--upload"):
 			upload_file_path = a
 		elif o in ("-t", "--target"):
-				PyNetCat_server = a
+			PyNetCat_server = a
 		elif o in ("-p", "--port"):
-				port = int(a)
+			server_port = int(a)
 		else:
 			assert False, "Fail To Parsing Option, please check your typo"
 			
-	
+	# running an PyNetCat client mode
+	if not listen and len(target) and server_port > 0:
+		
+		# block to waiting user input until hit a new line, then send it to PyNetCat server
+		buffer = sys.stdin.read()
+		send_to_server(buffer)
 
+		
+main()		
+
+
+def send_to_server(buffer):
 	
+	client_side = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	
+	try:
+		client_side.connect((PyNetCat_server, server_port))
+		if len(buffer):
+			client_side.send(buffer)
+		
+		while True:
+			
+			recv_len = 1
+			response = ""
+			
+			while recv_len:
+				data = client_side.recv(4096)
+				recv_len = len(data)
+				response += data
+				
+				if recv_len < 4096:
+					break
+				
+			print response,
+			
+			buffer = raw_input("")
+			buffer += "\n"
+			
+			client_side.send(buffer)
+			
+	except:
+		print "[***]Exception ! Exiting....."
+		client_side.close()
 	
 	
 	
