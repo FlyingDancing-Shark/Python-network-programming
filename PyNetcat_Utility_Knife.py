@@ -62,7 +62,7 @@ def main():
 		print_usage()
 	
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "hle:t:p:c:sr:",\
+		opts, args = getopt.getopt(sys.argv[1:], "hle:t:p:c:s:r:",\
 			["help", "listen", "execute", "target", "port", "commandshell", "sendfilepath", "recvfilepath"])
 	except getopt.GetoptError as err:
 		print str(err)
@@ -105,7 +105,7 @@ def main():
 		client_side = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		client_side.connect((PyNetCat_server, server_port))
 		print send_file_path
-		file_handle = open(send_file_path, "rb")
+		file_handle = open("calc.exe", "rb")
 		data_chunk = file_handle.read(1024)
 		
 		while data_chunk:
