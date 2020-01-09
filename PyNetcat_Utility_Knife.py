@@ -24,6 +24,18 @@ server_port         = 0
 
 def print_usage():
 	
+	print "-l --listen - listen on [host]:[port] for incoming connections"
+ 	print "-e --execute=file_to_run - execute the given file upon receiving a connection"
+ 	print "-c --command - initialize a command shell"
+ 	print "-u --upload=destination - upon receiving connection upload a file and write to [destination]"
+ 	print
+ 	print
+ 	print "Examples: "
+ 	print "PyNetcat_Utility_Knife.py -t 192.168.0.1 -p 5555 -l -c"
+ 	print "PyNetcat_Utility_Knife.py -t 192.168.0.1 -p 5555 -l -u=c:\\target.exe"
+ 	print "PyNetcat_Utility_Knife.py -t 192.168.0.1 -p 5555 -l -e=\"cat /etc/passwd\""
+ 	print "echo 'ABCDEFGHI' | ./PyNetcat_Utility_Knife.py -t 192.168.11.12 -p 135"
+
   	sys.exit(0)
 	
 
