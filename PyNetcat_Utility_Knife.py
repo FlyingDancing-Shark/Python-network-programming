@@ -14,7 +14,7 @@ import subprocess
 
 # these global used to record command-line option specified by users
 listen			    = False
-command			    = False
+cmd_shell		    = False
 upload			    = False
 execute			    = ""
 PyNetCat_server 	= ""
@@ -32,7 +32,7 @@ def main():
 	global listen
 	global server_port
 	global execute
-	global command
+	global cmd_shell
 	global upload_file_path
 	global PyNetCat_server
 	
@@ -62,7 +62,7 @@ def main():
 		elif o in ("-e", "--execute")"
 			execute = a
 		elif o in ("-c", "--commandshell"):
-			command = True
+			cmd_shell = True
 		elif o in ("-u", "--upload"):
 			upload_file_path = a
 		elif o in ("-t", "--target"):
@@ -139,11 +139,29 @@ def server_loop():
 		client_thread = threading.Thread(target=client_handler, args=(client_socket,))
 		client_thread.start()
 		
+
+def run_command(command):
 	
+	#  trim out the newline
+	command_to_exec = command.rstrip()
+	try:	
+		# because the server process to which each "client_handler" thread 
+		# belongs to, responsible for accepting new  client connection ,
+		# so the server process can not simply execute that command itself, 
+		# instead, it need to "fork" a sub process doing this heavy lifting
+		# so the use of "output" variable may imply IPC
+		output = subprocess.check_output(command_to_exec, stderr=subprocess.STDOUT,\
+						shell=True)
+	except:
+		output = "Fail to execute command on server's OS\r\n"
+	
+	return output
+	
+		
 def client_handler(client_socket):
 	global upload
 	global execute
-	global command
+	global cmd_shell
 	
 	# when server enable this feature, it require the client send correct binary raw byte that 
 	# consisting the file to be write to local hard drive
@@ -168,5 +186,33 @@ def client_handler(client_socket):
 			client_socket.send("Successfully saved file to %s\r\n" % upload_file_path)
 		except:
 			client_socket.send("Failed to save file to server's disk")
+	
+	# "execute" contain the command to be run parsed from the previously logic
+	# for example, -e=\"cat /etc/passwd\", here "execute" = "cat /etc/passwd\"
+	# note that this is an one-time command execution functionality, and 
+	# the command to be run is defined by server, NOT client
+	if len(execute):
+		
+		# execute program on server's OS then send result back to client to display
+		output = run_command(execute)
+		client_socket.send(output)
+	
+	# when server enable this feature, it supply a session resemble to a reverse cmd shell then receive 
+	# command from client and running it on local, send result back, 
+	# repeatedly forever
+	# 
+	if cmd_shell:
+		while True:
+			client_socket.send("<PyNetCat:#> ")
 			
+			cmd_buffer = ""
+			while "\n" not in cmd_buffer:
+				cmd_buffer += client_socket.recv(1024)
 			
+			response = run_command(cmd_buffer)
+			client_socket.send(response)
+
+
+			
+		
+		
