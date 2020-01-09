@@ -216,7 +216,8 @@ def client_handler(client_socket):
 				break
 			else:
 				file_buffer += data
-		
+				
+		print "recvieve!!"
 		try:
 			file_descriptor = open("backdoor.exe", "wb")
 			file_descriptor.write(file_buffer)
