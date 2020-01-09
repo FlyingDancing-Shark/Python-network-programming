@@ -92,6 +92,7 @@ def send_to_server(buffer):
 		if len(buffer):
 			client_side.send(buffer)
 		
+		# read user input -> send to PyNetCat server -> receive and print response -> read user input .......repeat forever
 		while True:
 			
 			recv_len = 1
