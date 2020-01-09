@@ -79,7 +79,9 @@ def main():
 		buffer = sys.stdin.read()
 		send_to_server(buffer)
 
-		
+	if listen:
+		server_loop()
+	
 main()		
 
 
@@ -117,5 +119,7 @@ def send_to_server(buffer):
 		print "[***]Exception ! Exiting....."
 		client_side.close()
 	
+	
+def server_loop():
 	
 	
