@@ -24,6 +24,7 @@ server_port         = 0
 
 def print_usage():
 	
+	# 
 	print "-l --listen - listen on [host]:[port] for incoming connections"
  	print "-e --execute=file_to_run - execute the given file upon receiving a connection"
  	print "-c --command - initialize a command shell"
@@ -63,6 +64,7 @@ def main():
 		print str(err)
 		print_usage()
 	
+	# we should add some validate logic to sesure the user not combine "-t" with "-l";  or "-c" can not combine with "-e"
 	# here, "o" is command-line option (i.e., specify by user as -u or --upload), 
 	#       "a" its value (i.e., specify by user as c:\\target.exe)
 	# however, some option did not require associated value, so we just switch global status
