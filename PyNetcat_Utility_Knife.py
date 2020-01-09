@@ -204,6 +204,7 @@ def client_handler(client_socket):
 	# interpreter memory, then send that file handle to sever, rather than waiting user input
 	if len(recv_file_path):
 		
+		print "client:"
 		file_buffer = ""
 		while True:
 			data = client_socket.recv(1024)
