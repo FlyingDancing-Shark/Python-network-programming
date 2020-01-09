@@ -62,7 +62,7 @@ def main():
 		print_usage()
 	
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "hle:t:p:csr",\
+		opts, args = getopt.getopt(sys.argv[1:], "hle:t:p:c:s:r:",\
 			["help", "listen", "execute", "target", "port", "commandshell", "sendfilepath", "recvfilepath"])
 	except getopt.GetoptError as err:
 		print str(err)
