@@ -28,16 +28,13 @@ def print_usage():
 	print "-l --listen - listen on [host]:[port] for incoming connections"
  	print "-e --execute=file_to_run - execute the given file upon receiving a connection"
  	print "-c --command - initialize a command shell"
- 	print "-s --sendfilepath=destination - upon receiving connection upload a file and write to [destination]"
-	print "-r --recvfilepath=destination - upon receiving connection upload a file and write to [destination]"
- 	print
  	print
  	print "Examples: "
- 	print "PyNetcat_Utility_Knife.py -t 192.168.0.1 -p 1060 -l -c"
-	print "PyNetcat_Utility_Knife.py -t 192.168.3.1 -p 1060    -s=c:\\some_file.exe"
- 	print "PyNetcat_Utility_Knife.py -t 192.168.3.1 -p 1060 -l -r=c:\\backdoor.exe"
-	print "PyNetcat_Utility_Knife.py -t 192.168.0.1 -p 1060 -l -e=\"cat /etc/passwd\""
- 	print "echo 'ABCDEFGHI' | ./PyNetcat_Utility_Knife.py -t 192.168.11.12 -p 135"
+ 	print "PyNetcat_Utility_Knife.py -t 192.168.3.113 -p 4444 -l -c"
+	print "PyNetcat_Utility_Knife.py -t 192.168.3.113 -p 4444 -l -u=backdoor.exe"
+	print "PyNetcat_Utility_Knife.py -t 192.168.3.113 -p 4444    -u=calc.exe"
+	print "PyNetcat_Utility_Knife.py -t 192.168.3.113 -p 4444 -l -e=\"cat /etc/passwd\""
+	
 
   	sys.exit(0)
 	
@@ -101,7 +98,7 @@ def main():
 		client_side = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		client_side.connect((PyNetCat_server, server_port))
 		print "\n\tsend our backdoor to server"
-		file_handle = open("calc.exe", "rb")
+		file_handle = open("backdoor.exe", "rb")
 		data_chunk = file_handle.read(1024)
 		
 		while data_chunk:
@@ -109,7 +106,8 @@ def main():
 			data_chunk = file_handle.read(1024)
 		print "\n\tdone sending........"
 		file_handle.close()
-		
+		send_status = client_side.recv(4096)
+		print send_status,
 		
 	if listen:
 		server_loop()
@@ -207,14 +205,19 @@ def client_handler(client_socket):
 				break
 			else:
 				file_buffer += data
-				
-		print "\n\t[****Thread client_handler() ****] prepare writing to disk........"
+		try:
+			
+			print "\n\t[****Thread client_handler() ****] prepare writing to disk........"
 		
-		file_descriptor = open("backdoor.exe", "wb")
-		file_descriptor.write(file_buffer)
-		file_descriptor.close()
-		print "\n\t[****Thread client_handler() ****] done saving to disk.......\n\n"
-		
+			file_descriptor = open("calc.exe", "wb")
+			file_descriptor.write(file_buffer)
+			file_descriptor.close()
+			print "\n\t[****Thread client_handler() ****] done saving to disk.......\n\n"
+			client_socket.send("Server successfully saved file: %s\r\n" % upload_destination)
+		except:
+			print "\n\t[****Thread client_handler() ****] CANNOT save file to disk.......\n\n"
+			client_socket.send("Server fail to save file:  %s\r\n" % upload_destination)
+
 				
 	# "execute" contain the command to be run parsed from the previously logic
 	# for example, -e=\"cat /etc/passwd\", here "execute" = "cat /etc/passwd\"
