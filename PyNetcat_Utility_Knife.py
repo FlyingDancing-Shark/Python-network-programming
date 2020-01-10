@@ -165,10 +165,10 @@ def server_loop():
 	
 	while True:
 		client_socket, addr = server_side.accept()
-		print "accept() a client connection\n"
+		print "\n\taccept() a client connection"
 		client_thread = threading.Thread(target=client_handler, args=(client_socket,))
 		client_thread.start()
-		print "starting a thread to handle request\n"
+		print "\n\tstarting a thread to handle request"
 
 def run_command(command):
 	
@@ -193,7 +193,7 @@ def client_handler(client_socket):
 	global execute
 	global cmd_shell
 	
-	print "I,m new thread and received %s" % upload_destination
+	print "\n\tI,m new thread and received %s" % upload_destination
 	# when server enable this feature, it require the client send correct binary raw byte that 
 	# consisting the file to be write to local hard drive
 	# in this case, the client will need to load the file's content into Python 
@@ -208,12 +208,12 @@ def client_handler(client_socket):
 			else:
 				file_buffer += data
 				
-		print "prepare writing to disk........"
+		print "\n\tprepare writing to disk........"
 		
 		file_descriptor = open("backdoor.exe", "wb")
 		file_descriptor.write(file_buffer)
 		file_descriptor.close()
-		print "done saving to disk......."
+		print "\n\tdone saving to disk.......\n\n"
 		
 				
 	# "execute" contain the command to be run parsed from the previously logic
