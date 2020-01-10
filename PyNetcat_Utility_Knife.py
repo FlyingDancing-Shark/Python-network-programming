@@ -30,7 +30,7 @@ def print_usage():
  	print "-c --command - initialize a command shell"
  	print
  	print "Examples: "
- 	print "PyNetcat_Utility_Knife.py -t 192.168.3.113 -p 4444 -l -c"
+ 	print "PyNetcat_Utility_Knife.py -t 192.168.3.113 -p 4444 -l -c"	
 	print "PyNetcat_Utility_Knife.py -t 192.168.3.113 -p 4444"
 	print "PyNetcat_Utility_Knife.py -t 192.168.3.113 -p 4444 -u backdoor.exe"
 	print "PyNetcat_Utility_Knife.py -t 192.168.3.113 -p 4444 -l -u calc.exe"
