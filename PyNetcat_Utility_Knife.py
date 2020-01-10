@@ -100,14 +100,14 @@ def main():
 		
 		client_side = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		client_side.connect((PyNetCat_server, server_port))
-		print "send our backdoor to server"
+		print "\n\tsend our backdoor to server"
 		file_handle = open("calc.exe", "rb")
 		data_chunk = file_handle.read(1024)
 		
 		while data_chunk:
 			client_side.send(data_chunk)
 			data_chunk = file_handle.read(1024)
-		print "done sending........"
+		print "\n\tdone sending........"
 		file_handle.close()
 		
 		
@@ -165,10 +165,10 @@ def server_loop():
 	
 	while True:
 		client_socket, addr = server_side.accept()
-		print "\n\taccept() a client connection"
+		print "\n\t[****server_loop()****] accept a client connection"
 		client_thread = threading.Thread(target=client_handler, args=(client_socket,))
 		client_thread.start()
-		print "\n\tstarting a thread to handle request"
+		print "\n\t[****server_loop()****] starting a thread to handle request"
 
 def run_command(command):
 	
@@ -193,7 +193,7 @@ def client_handler(client_socket):
 	global execute
 	global cmd_shell
 	
-	print "\n\tI,m new thread and received %s" % upload_destination
+	print "\n\t[****Thread client_handler() ****] received %s" % upload_destination
 	# when server enable this feature, it require the client send correct binary raw byte that 
 	# consisting the file to be write to local hard drive
 	# in this case, the client will need to load the file's content into Python 
@@ -208,12 +208,12 @@ def client_handler(client_socket):
 			else:
 				file_buffer += data
 				
-		print "\n\tprepare writing to disk........"
+		print "\n\t[****Thread client_handler() ****] prepare writing to disk........"
 		
 		file_descriptor = open("backdoor.exe", "wb")
 		file_descriptor.write(file_buffer)
 		file_descriptor.close()
-		print "\n\tdone saving to disk.......\n\n"
+		print "\n\t[****Thread client_handler() ****] done saving to disk.......\n\n"
 		
 				
 	# "execute" contain the command to be run parsed from the previously logic
