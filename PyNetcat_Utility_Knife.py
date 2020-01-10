@@ -100,7 +100,7 @@ def main():
 		
 		client_side = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		client_side.connect((PyNetCat_server, server_port))
-		print "send calc.exe to server"
+		print "send our backdoor to server"
 		file_handle = open("calc.exe", "rb")
 		data_chunk = file_handle.read(1024)
 		
@@ -109,10 +109,6 @@ def main():
 			data_chunk = file_handle.read(1024)
 		print "done sending........"
 		file_handle.close()
-		# sever_ACK = client_side.recv(1024)
-		# print sever_ACK
-		# client_side.shutdown(socket.SHUT_WR)
-		# client_side.close()
 		
 		
 	if listen:
@@ -166,13 +162,13 @@ def server_loop():
 	
 	# maximum backlog = 5, which means the server support up to five clients ?
 	server_side.listen(5)
-	print "before accept"
+	
 	while True:
 		client_socket, addr = server_side.accept()
-		print "after accept"
+		print "accept() a client connection\n"
 		client_thread = threading.Thread(target=client_handler, args=(client_socket,))
 		client_thread.start()
-		print "after thread start"
+		print "starting a thread to handle request\n"
 
 def run_command(command):
 	
@@ -197,7 +193,7 @@ def client_handler(client_socket):
 	global execute
 	global cmd_shell
 	
-	print "received %s" % upload_destination
+	print "I,m new thread and received %s" % upload_destination
 	# when server enable this feature, it require the client send correct binary raw byte that 
 	# consisting the file to be write to local hard drive
 	# in this case, the client will need to load the file's content into Python 
@@ -213,18 +209,13 @@ def client_handler(client_socket):
 				file_buffer += data
 				
 		print "prepare writing to disk........"
-		try:
-			file_descriptor = open("backdoor.exe", "wb")
-			file_descriptor.write(file_buffer)
-			file_descriptor.close()
-			
-			# inform the client file upload complete
-			print "done saving to disk"
-			# client_socket.send("Successfully saved file to %s\r\n" % recv_file_path)
-		except:
-			print "error !!!"
-			# client_socket.send("Failed to save file to server's disk")
-	
+		
+		file_descriptor = open("backdoor.exe", "wb")
+		file_descriptor.write(file_buffer)
+		file_descriptor.close()
+		print "done saving to disk......."
+		
+				
 	# "execute" contain the command to be run parsed from the previously logic
 	# for example, -e=\"cat /etc/passwd\", here "execute" = "cat /etc/passwd\"
 	# note that this is an one-time command execution functionality, and 
