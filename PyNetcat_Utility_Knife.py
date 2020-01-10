@@ -204,7 +204,6 @@ def client_handler(client_socket):
 	# interpreter memory, then send that file handle to sever, rather than waiting user input
 	if len(upload_destination):
 		
-		print "client:"
 		file_buffer = ""
 		while True:
 			data = client_socket.recv(1024)
@@ -221,11 +220,9 @@ def client_handler(client_socket):
 			
 			# inform the client file upload complete
 			print "done saving to disk"
-			sys.exit(0)
 			# client_socket.send("Successfully saved file to %s\r\n" % recv_file_path)
 		except:
 			print "error !!!"
-			sys.exit(1)
 			# client_socket.send("Failed to save file to server's disk")
 	
 	# "execute" contain the command to be run parsed from the previously logic
