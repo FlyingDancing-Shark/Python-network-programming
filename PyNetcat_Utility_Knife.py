@@ -18,8 +18,7 @@ cmd_shell		    = False
 upload			    = False
 execute			    = ""
 PyNetCat_server 	= ""
-send_file_path	 	= ""
-recv_file_path		= ""
+upload_destination 	= ""	
 server_port         	= 0
 
 
@@ -49,8 +48,7 @@ def main():
 	global server_port
 	global execute
 	global cmd_shell
-	global send_file_path
-	global recv_file_path
+	global upload_destination
 	global PyNetCat_server
 	
 	print "[*********] NetCat rewrite with Python [**************]"
@@ -62,8 +60,8 @@ def main():
 		print_usage()
 	
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "hle:t:p:c:s:r:",\
-			["help", "listen", "execute", "target", "port", "commandshell", "sendfilepath", "recvfilepath"])
+		opts, args = getopt.getopt(sys.argv[1:], "hle:t:p:cu:",\
+			["help", "listen", "execute", "target", "port", "commandshell", "upload"])
 	except getopt.GetoptError as err:
 		print str(err)
 		print_usage()
@@ -81,10 +79,8 @@ def main():
 			execute = a
 		elif o in ("-c", "--commandshell"):
 			cmd_shell = True
-		elif o in ("-s", "--sendfilepath"):
-			send_file_path = a
-		elif o in ("-r", "--recvfilepath"):
-			recv_file_path = a
+		elif o in ("-u", "--upload"):
+ 			upload_destination = a
 		elif o in ("-t", "--target"):
 			PyNetCat_server = a
 		elif o in ("-p", "--port"):
@@ -93,25 +89,25 @@ def main():
 			assert False, "Fail To Parsing Option, please check your typo"
 			
 	# running an PyNetCat client mode
-	if not listen and len(PyNetCat_server) and server_port > 0 and not len(send_file_path):
+	if not listen and len(PyNetCat_server) and server_port > 0 and not len(upload_destination):
 		
 		# block to waiting user input until hit a new line, then send it to PyNetCat server
 		# but we can not send arbitrary data, the server only support those type specify in the command-line options
 		buffer = sys.stdin.read()
 		send_to_server(buffer)
 	
-	if not listen and len(PyNetCat_server) and server_port > 0 and len(send_file_path):
+	if not listen and len(PyNetCat_server) and server_port > 0 and len(upload_destination):
 		
 		client_side = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		client_side.connect((PyNetCat_server, server_port))
-		print send_file_path
+		print "send calc.exe to server"
 		file_handle = open("calc.exe", "rb")
 		data_chunk = file_handle.read(1024)
 		
 		while data_chunk:
 			client_side.send(data_chunk)
 			data_chunk = file_handle.read(1024)
-		print "success!"
+		print "done sending........"
 		file_handle.close()
 		# sever_ACK = client_side.recv(1024)
 		# print sever_ACK
@@ -201,12 +197,12 @@ def client_handler(client_socket):
 	global execute
 	global cmd_shell
 	
-	print recv_file_path
+	print "received %s" % upload_destination
 	# when server enable this feature, it require the client send correct binary raw byte that 
 	# consisting the file to be write to local hard drive
 	# in this case, the client will need to load the file's content into Python 
 	# interpreter memory, then send that file handle to sever, rather than waiting user input
-	if len(recv_file_path):
+	if len(upload_destination):
 		
 		print "client:"
 		file_buffer = ""
@@ -217,16 +213,17 @@ def client_handler(client_socket):
 			else:
 				file_buffer += data
 				
-		print "recvieve!!"
+		print "prepare writing to disk........"
 		try:
 			file_descriptor = open("backdoor.exe", "wb")
 			file_descriptor.write(file_buffer)
 			file_descriptor.close()
 			
 			# inform the client file upload complete
-			client_socket.send("Successfully saved file to %s\r\n" % recv_file_path)
-		except:
-			client_socket.send("Failed to save file to server's disk")
+			print "done saving to disk"
+			# client_socket.send("Successfully saved file to %s\r\n" % recv_file_path)
+		# except:
+			# client_socket.send("Failed to save file to server's disk")
 	
 	# "execute" contain the command to be run parsed from the previously logic
 	# for example, -e=\"cat /etc/passwd\", here "execute" = "cat /etc/passwd\"
