@@ -106,13 +106,10 @@ def main():
 			data_chunk = file_handle.read(1024)
 		print "\n\tdone sending........"
 		file_handle.close()
-		send_status = client_side.recv(4096)
-		print send_status,
-		
+			
 	if listen:
 		server_loop()
 	
-
 
 def send_to_server(buffer):
 	
@@ -138,12 +135,9 @@ def send_to_server(buffer):
 					break
 				
 			print response,
-			
 			buffer = raw_input("")
 			buffer += "\n"
-			
 			client_side.send(buffer)
-			
 	except:
 		print "[***]Exception ! Exiting....."
 		client_side.close()
@@ -205,20 +199,14 @@ def client_handler(client_socket):
 				break
 			else:
 				file_buffer += data
-		try:
-			
-			print "\n\t[****Thread client_handler() ****] prepare writing to disk........"
 		
-			file_descriptor = open("calc.exe", "wb")
-			file_descriptor.write(file_buffer)
-			file_descriptor.close()
-			print "\n\t[****Thread client_handler() ****] done saving to disk.......\n\n"
-			client_socket.send("Server successfully saved file: %s\r\n" % upload_destination)
-		except:
-			print "\n\t[****Thread client_handler() ****] CANNOT save file to disk.......\n\n"
-			client_socket.send("Server fail to save file:  %s\r\n" % upload_destination)
-
-				
+		print "\n\t[****Thread client_handler() ****] prepare writing to disk........"
+		file_descriptor = open("calc.exe", "wb")
+		file_descriptor.write(file_buffer)
+		file_descriptor.close()
+		print "\n\t[****Thread client_handler() ****] done saving to disk.......\n\n"
+		
+		
 	# "execute" contain the command to be run parsed from the previously logic
 	# for example, -e=\"cat /etc/passwd\", here "execute" = "cat /etc/passwd\"
 	# note that this is an one-time command execution functionality, and 
