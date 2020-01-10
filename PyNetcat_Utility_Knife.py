@@ -222,6 +222,7 @@ def client_handler(client_socket):
 	# repeatedly forever
 	# 
 	if cmd_shell:
+		print "\n\t[****Thread client_handler() ****] generating reverse shell.......\n\n"
 		while True:
 			client_socket.send("<PyNetCat:#> ")
 			
