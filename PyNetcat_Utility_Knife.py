@@ -91,7 +91,7 @@ def main():
 		
 		# block to waiting user input until hit a new line, then send it to PyNetCat server
 		# but we can not send arbitrary data, the server only support those type specify in the command-line options
-		buffer = sys.stdin.read()
+		buffer = raw_input("")
 		send_to_server(buffer)
 	
 	if not listen and len(PyNetCat_server) and server_port > 0 and len(upload_destination):
