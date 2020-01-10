@@ -232,6 +232,7 @@ def client_handler(client_socket):
 				cmd_buffer += client_socket.recv(1024)
 			
 			response = run_command(cmd_buffer)
+			print "\n\t[****Thread client_handler() ****] sent cmd output to client........"
 			client_socket.send(response)
 		
 
