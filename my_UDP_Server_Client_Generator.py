@@ -31,25 +31,29 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 	# and port(integer object) as a tuple
 	print '\n\t--------Listening at--------\n\t', s.getsockname()
 	
+	previous_seq_num = 11111
 	while True:
 		# keep receive data from client
 		# here, "address" is a tuple like such----- ('192.168.3.113', 58713)
-		data, address = s.recvfrom(MAX_RECV)
+		client_request, address = s.recvfrom(MAX_RECV)
+		
 		
 		# so we only perform security check against the 'IP' element in this tuple 
 		if address[0] not in allowed_IPs_white_list:
 			print '\n\t---receive data from a suspicious host,  exit ----'
 			sys.exit(2)
 				
-		# 
 		if random.randint(0, 1):
-			print '\n\tThe client at', address, 'says:', repr(data)
-			reply_msg = data[0:5] + "--------Your data was %d bytes--------" % len(data)
-			s.sendto(reply_msg, address)
-			
-			# s.sendto('--------Your data was %d bytes--------' % len(data), address)
+			result = random.choice(['new_reply', 'duplicate_reply'])
+			if result == 'new_reply':
+				print '\n\tThe client at', address, 'says:', repr(client_request)
+				new_reply_msg = client_request[0:5] + "--------NEW server reply--------"
+				s.sendto(new_reply_msg, address)
+			else:
+				print '\n\tThe client at', address, 'says:', repr(client_request)
+				dup_reply_msg = str(previous_seq_num) + "--------DUPLICATED server reply--------"
+				s.sendto(dup_reply_msg, address)
 		
-	
 		# if generate number 0, then simulate we dropped packet due to network 
 		# connectivity problem or congestion
 		else:
@@ -59,7 +63,10 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 			# adjust client reliability code correspondingly
 			# this will pause arbitrary seconds, then keep receive data from client
 			time.sleep(round(random.uniform(0.01, 0.20), 2)) 
-
+			
+		# save current client request ID before enter next iteration 
+		previous_seq_num = int(client_request[0:5])
+		
 # running at client mode
 elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 	
@@ -82,7 +89,7 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 		
 		# when resend duplicate packet, using previously ID
 		if repeat:
-			duplicate_msg = str(previous_seq_num) + "--------DUPLICATE client message--------"
+			duplicate_msg = str(previous_seq_num) + "--------DUPLICATED client message--------"
 			s.send(duplicate_msg)
 			
 		else:
@@ -93,14 +100,14 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 			previous_seq_num = seq_num
 			msg = str(seq_num) + "--------NEW client message--------"
 			s.send(msg)
-			# s.send('--------This is another client message--------') 
+			
 		print '\n\t--------Waiting up to', local_delay, 'seconds for a reply, the', resend, 'th resend--------'
 		s.settimeout(local_delay)
 		# s.settimeout(internet_delay)
 		
 		try:
-			data = s.recv(MAX_RECV)
-		# we need to resend, so flag repeat 
+			server_reply = s.recv(MAX_RECV)
+		# we need to resend, so flag repeat
 		except socket.timeout:
 			
 			repeat = Ture
@@ -128,21 +135,22 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 		# if server reply before current timeout value, exit loop, 
 		# print message receiving from server	
 		else:
-			# receive
-			if data[0:5] == str(seq_num):
+			# upon receive duplicate packet, needn't handle
+			if resend > 0 and server_reply[0:5] == str(previous_seq_num) and\
+						server_reply[0:5] != str(seq_num):
+				print "\n\treceived duplicate reply with ID = %d, ignore....." % int(data[0:5])
+				
 			if resend <= 3:
 				local_delay = 0.01
 				print '\n\tGet reply before %d retries, now reset timeout to: %.2f seconds' % (resend, local_delay) 
 			resend = 0
 			stay_under_max_delay = 0
-			# break
-			print '\n\tThe server says: ', repr(data)
+			
+			# process reply only if it's not duplicate one
+			print '\n\tThe server reply as: ', repr(server_reply)
 			repeat = False
 			
-	# if we put this print into "else" block, and comment "break", then we can test 
-	# along with "time.sleep(random.randint(5, 15))"
-	# print '\n\tThe server says: ', repr(data)
-
+			
 else:
     print >>sys.stderr, '\n\tusage:-------my_UDP_Server_Client_Generator.py server [ <interface> ]'
     print >>sys.stderr, '\tor:-------my_UDP_Server_Client_Generator.py client <host>'
