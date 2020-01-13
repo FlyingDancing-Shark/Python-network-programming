@@ -38,7 +38,6 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 			
 	# we should receive the very first packet and retrieve its ID and reply client , 
 	# then could start randomly reply/dropped logic
-	# 11111
 	previous_seq_num = int(client_request[0:5])
 	print '\n\tThe client at', address, 'says:', repr(client_request)
 	new_reply_msg = client_request[0:5] + "--------NEW server reply--------"
@@ -120,13 +119,9 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 		else:
 			# when sending new packet, generate new ID
 			seq_num = random.randint(10000, 99999)
-			
-			# save current ID for possible later use
-			# 44444
-			previous_seq_num = seq_num
 			msg = str(seq_num) + "--------NEW client message--------"
 			s.send(msg)
-			
+		
 		print '\n\t--------Waiting up to', local_delay, 'seconds for a reply, the', resend, 'th resend--------'
 		s.settimeout(local_delay)
 		# s.settimeout(internet_delay)
@@ -176,6 +171,8 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 			print '\n\tThe server reply as: ', repr(server_reply)
 			repeat = False
 			
+		# save current ID for possible later use	
+		previous_seq_num = seq_num	
 			
 else:
     print >>sys.stderr, '\n\tusage:-------my_UDP_Server_Client_Generator.py server [ <interface> ]'
