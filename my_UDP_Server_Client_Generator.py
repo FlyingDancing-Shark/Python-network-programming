@@ -56,7 +56,7 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 			# pause server for a period of time to simulate it is down entirely, 
 			# adjust client reliability code correspondingly
 			# this will pause arbitrary seconds, then keep receive data from client
-			time.sleep(round(random.uniform(2.0, 18.0), 0)) 
+			# time.sleep(round(random.uniform(2.0, 18.0), 0)) 
 			
 		# save current client request ID before enter next iteration 
 		# previous_seq_num = int(client_request[0:5])
