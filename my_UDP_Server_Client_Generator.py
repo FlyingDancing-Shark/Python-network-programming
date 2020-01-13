@@ -31,6 +31,7 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 	# and port(integer object) as a tuple
 	print '\n\t--------Listening at--------\n\t', s.getsockname()
 	
+	'''
 	client_request, address = s.recvfrom(MAX_RECV)
 	if address[0] not in allowed_IPs_white_list:
 			print '\n\t---receive data from a suspicious host,  exit ----'
@@ -42,13 +43,12 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 	print '\n\tThe client at', address, 'says:', repr(client_request)
 	new_reply_msg = client_request[0:5] + "--------NEW server reply--------"
 	s.sendto(new_reply_msg, address)
+	'''
 	
 	while True:
 		# keep receive data from client
 		# here, "address" is a tuple like such----- ('192.168.3.113', 58713)
-		# 44444
 		client_request, address = s.recvfrom(MAX_RECV)
-		
 		
 		# so we only perform security check against the 'IP' element in this tuple 
 		if address[0] not in allowed_IPs_white_list:
@@ -56,21 +56,24 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 			sys.exit(2)
 				
 		if random.randint(0, 1):
+			'''
 			result = random.choice(['new_reply', 'duplicate_reply'])
 			if result == 'new_reply':
 				print '\n\tThe client at', address, 'says:', repr(client_request)
 				new_reply_msg = client_request[0:5] + "--------NEW server reply--------"
 				s.sendto(new_reply_msg, address)
 			else:
-				print '\n\tThe client at', address, 'says:', repr(client_request)
-				dup_reply_msg = str(previous_seq_num) + "--------DUPLICATED server reply--------"
-				s.sendto(dup_reply_msg, address)
+			'''	
+			print '\n\treceive client message: ', repr(client_request)
+				reply_to_client = client_request[0:5] + "--------Server Reply--------"
+			print '\n\tNow reply client: ', repr(reply_to_client)	
+				s.sendto(reply_to_client, address)
 		
 		
 		# if generate number 0, then simulate we dropped packet due to network 
 		# connectivity problem or congestion
 		else:
-			print '\n\tPretending to drop packet send from client--------', address
+			print '\n\tPretending to drop client request: --------', client_request
 			
 			# pause server for a period of time to simulate it is down entirely, 
 			# adjust client reliability code correspondingly
@@ -78,7 +81,7 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 			time.sleep(round(random.uniform(0.01, 0.20), 2)) 
 			
 		# save current client request ID before enter next iteration 
-		previous_seq_num = int(client_request[0:5])
+		# previous_seq_num = int(client_request[0:5])
 		
 # running at client mode
 elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
@@ -100,14 +103,15 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 	# because first time the server always respond us without timeout, 
 	# dropped or duplicated packet, so we can get packet successfully, 
 	# and store current request ID for later used
+	'''
 	seq_num = random.randint(10000, 99999)
-	# 11111
+	
 	previous_seq_num = seq_num
 	msg = str(seq_num) + "--------NEW client message--------"
 	s.send(msg)
 	server_reply = s.recv(MAX_RECV)
 	print '\n\tThe server reply as: ', repr(server_reply)
-	
+	'''
 	while True:
 		time.sleep(1)
 		
@@ -115,12 +119,13 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 		if repeat:
 			duplicate_msg = str(previous_seq_num) + "--------DUPLICATED client message--------"
 			s.send(duplicate_msg)
-			
+			print 'send to server: ', duplicate_msg
 		else:
 			# when sending new packet, generate new ID
 			seq_num = random.randint(10000, 99999)
 			msg = str(seq_num) + "--------NEW client message--------"
 			s.send(msg)
+			print 'send to server: ', msg
 		
 		print '\n\t--------Waiting up to', local_delay, 'seconds for a reply, the', resend, 'th resend--------'
 		s.settimeout(local_delay)
@@ -157,9 +162,8 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 		# print message receiving from server	
 		else:
 			# upon receive duplicate packet, needn't handle
-			if resend > 0 and server_reply[0:5] == str(previous_seq_num) and\
-						server_reply[0:5] != str(seq_num):
-				print "\n\treceived duplicate reply with ID = %d, ignore....." % int(data[0:5])
+			if resend > 0 and server_reply[0:5] != str(seq_num):
+				print '\n\tReceived duplicate reply: ", server_reply
 				
 			if resend <= 3:
 				local_delay = 0.01
@@ -168,7 +172,7 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 			stay_under_max_delay = 0
 			
 			# process reply only if it's not duplicate one
-			print '\n\tThe server reply as: ', repr(server_reply)
+			print '\n\tThe UNIQUE server reply is: ', repr(server_reply)
 			repeat = False
 			
 		# save current ID for possible later use	
