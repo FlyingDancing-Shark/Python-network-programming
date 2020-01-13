@@ -119,13 +119,13 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 		if repeat:
 			duplicate_msg = str(previous_seq_num) + "--------DUPLICATED client message--------"
 			s.send(duplicate_msg)
-			print 'send to server: ', duplicate_msg
+			print '\n\tsend to server: ', duplicate_msg
 		else:
 			# when sending new packet, generate new ID
 			seq_num = random.randint(10000, 99999)
 			msg = str(seq_num) + "--------NEW client message--------"
 			s.send(msg)
-			print 'send to server: ', msg
+			print '\n\tsend to server: ', msg
 		
 		# save current ID for possible later use	
 		previous_seq_num = seq_num
@@ -164,21 +164,23 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 		# if server reply before current timeout value, exit loop, 
 		# print message receiving from server	
 		else:
+			if resend <= 3:
+				local_delay = 0.01
+				print '\n\tGet reply before %d retries, now reset timeout to: %.2f seconds' % (resend, local_delay)
+				
 			# upon receive duplicate packet, needn't handle
 			if resend > 0 and server_reply[0:5] == str(previous_seq_num):
 				print '\n\tIgnoring duplicate reply: ', server_reply
+			else:
+				# process reply only if it's not duplicate one
+				print '\n\tThe UNIQUE server reply is: ', repr(server_reply)
+				# ...........do some actual packet process works..........
 				
-			if resend <= 3:
-				local_delay = 0.01
-				print '\n\tGet reply before %d retries, now reset timeout to: %.2f seconds' % (resend, local_delay) 
 			resend = 0
 			stay_under_max_delay = 0
-			
-			# process reply only if it's not duplicate one
-			print '\n\tThe UNIQUE server reply is: ', repr(server_reply)
 			repeat = False
 				
-			
+				
 else:
     print >>sys.stderr, '\n\tusage:-------my_UDP_Server_Client_Generator.py server [ <interface> ]'
     print >>sys.stderr, '\tor:-------my_UDP_Server_Client_Generator.py client <host>'
