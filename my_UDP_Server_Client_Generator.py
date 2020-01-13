@@ -65,9 +65,9 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 			else:
 			'''	
 			print '\n\treceive client message: ', repr(client_request)
-				reply_to_client = client_request[0:5] + "--------Server Reply--------"
+			reply_to_client = client_request[0:5] + "--------Server Reply--------"
 			print '\n\tNow reply client: ', repr(reply_to_client)	
-				s.sendto(reply_to_client, address)
+			s.sendto(reply_to_client, address)
 		
 		
 		# if generate number 0, then simulate we dropped packet due to network 
