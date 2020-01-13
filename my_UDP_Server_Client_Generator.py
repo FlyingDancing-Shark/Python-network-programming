@@ -163,7 +163,7 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 		else:
 			# upon receive duplicate packet, needn't handle
 			if resend > 0 and server_reply[0:5] != str(seq_num):
-				print '\n\tReceived duplicate reply: ", server_reply
+				print '\n\tReceived duplicate reply: ', server_reply
 				
 			if resend <= 3:
 				local_delay = 0.01
