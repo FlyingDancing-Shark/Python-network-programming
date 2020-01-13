@@ -131,7 +131,7 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 		# we need to resend, so flag repeat
 		except socket.timeout:
 			
-			repeat = Ture
+			repeat = True
 			local_delay *= 2
 			
 			# if we resend over four times, stop increase waiting time or 
