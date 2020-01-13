@@ -127,6 +127,9 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 			s.send(msg)
 			print 'send to server: ', msg
 		
+		# save current ID for possible later use	
+		previous_seq_num = seq_num
+		
 		print '\n\t--------Waiting up to', local_delay, 'seconds for a reply, the', resend, 'th resend--------'
 		s.settimeout(local_delay)
 		# s.settimeout(internet_delay)
@@ -162,8 +165,8 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 		# print message receiving from server	
 		else:
 			# upon receive duplicate packet, needn't handle
-			if resend > 0 and server_reply[0:5] != str(seq_num):
-				print '\n\tReceived duplicate reply: ', server_reply
+			if resend > 0 and server_reply[0:5] == str(previous_seq_num):
+				print '\n\tIgnoring duplicate reply: ', server_reply
 				
 			if resend <= 3:
 				local_delay = 0.01
@@ -174,9 +177,7 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 			# process reply only if it's not duplicate one
 			print '\n\tThe UNIQUE server reply is: ', repr(server_reply)
 			repeat = False
-			
-		# save current ID for possible later use	
-		previous_seq_num = seq_num	
+				
 			
 else:
     print >>sys.stderr, '\n\tusage:-------my_UDP_Server_Client_Generator.py server [ <interface> ]'
