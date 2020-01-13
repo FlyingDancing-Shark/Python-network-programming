@@ -31,10 +31,23 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 	# and port(integer object) as a tuple
 	print '\n\t--------Listening at--------\n\t', s.getsockname()
 	
-	previous_seq_num = 11111
+	client_request, address = s.recvfrom(MAX_RECV)
+	if address[0] not in allowed_IPs_white_list:
+			print '\n\t---receive data from a suspicious host,  exit ----'
+			sys.exit(2)
+			
+	# we should receive the very first packet and retrieve its ID and reply client , 
+	# then could start randomly reply/dropped logic
+	# 11111
+	previous_seq_num = int(client_request[0:5])
+	print '\n\tThe client at', address, 'says:', repr(client_request)
+	new_reply_msg = client_request[0:5] + "--------NEW server reply--------"
+	s.sendto(new_reply_msg, address)
+	
 	while True:
 		# keep receive data from client
 		# here, "address" is a tuple like such----- ('192.168.3.113', 58713)
+		# 44444
 		client_request, address = s.recvfrom(MAX_RECV)
 		
 		
@@ -53,6 +66,7 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 				print '\n\tThe client at', address, 'says:', repr(client_request)
 				dup_reply_msg = str(previous_seq_num) + "--------DUPLICATED server reply--------"
 				s.sendto(dup_reply_msg, address)
+		
 		
 		# if generate number 0, then simulate we dropped packet due to network 
 		# connectivity problem or congestion
@@ -84,6 +98,17 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 	seq_num = 0
 	previous_seq_num = 0 
 	
+	# because first time the server always respond us without timeout, 
+	# dropped or duplicated packet, so we can get packet successfully, 
+	# and store current request ID for later used
+	seq_num = random.randint(10000, 99999)
+	# 11111
+	previous_seq_num = seq_num
+	msg = str(seq_num) + "--------NEW client message--------"
+	s.send(msg)
+	server_reply = s.recv(MAX_RECV)
+	print '\n\tThe server reply as: ', repr(server_reply)
+	
 	while True:
 		time.sleep(1)
 		
@@ -97,6 +122,7 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 			seq_num = random.randint(10000, 99999)
 			
 			# save current ID for possible later use
+			# 44444
 			previous_seq_num = seq_num
 			msg = str(seq_num) + "--------NEW client message--------"
 			s.send(msg)
