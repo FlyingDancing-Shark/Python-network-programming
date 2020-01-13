@@ -31,20 +31,6 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 	# and port(integer object) as a tuple
 	print '\n\t--------Listening at--------\n\t', s.getsockname()
 	
-	'''
-	client_request, address = s.recvfrom(MAX_RECV)
-	if address[0] not in allowed_IPs_white_list:
-			print '\n\t---receive data from a suspicious host,  exit ----'
-			sys.exit(2)
-			
-	# we should receive the very first packet and retrieve its ID and reply client , 
-	# then could start randomly reply/dropped logic
-	previous_seq_num = int(client_request[0:5])
-	print '\n\tThe client at', address, 'says:', repr(client_request)
-	new_reply_msg = client_request[0:5] + "--------NEW server reply--------"
-	s.sendto(new_reply_msg, address)
-	'''
-	
 	while True:
 		# keep receive data from client
 		# here, "address" is a tuple like such----- ('192.168.3.113', 58713)
@@ -56,19 +42,11 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 			sys.exit(2)
 				
 		if random.randint(0, 1):
-			'''
-			result = random.choice(['new_reply', 'duplicate_reply'])
-			if result == 'new_reply':
-				print '\n\tThe client at', address, 'says:', repr(client_request)
-				new_reply_msg = client_request[0:5] + "--------NEW server reply--------"
-				s.sendto(new_reply_msg, address)
-			else:
-			'''	
+				
 			print '\n\treceive client message: ', repr(client_request)
 			reply_to_client = client_request[0:5] + "--------Server Reply--------"
 			print '\n\tNow reply client: ', repr(reply_to_client)	
 			s.sendto(reply_to_client, address)
-		
 		
 		# if generate number 0, then simulate we dropped packet due to network 
 		# connectivity problem or congestion
@@ -78,7 +56,7 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 			# pause server for a period of time to simulate it is down entirely, 
 			# adjust client reliability code correspondingly
 			# this will pause arbitrary seconds, then keep receive data from client
-			time.sleep(round(random.uniform(0.01, 0.20), 2)) 
+			time.sleep(round(random.uniform(2.0, 18.0), 0)) 
 			
 		# save current client request ID before enter next iteration 
 		# previous_seq_num = int(client_request[0:5])
@@ -92,7 +70,7 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 	print '\n\t--------Client socket name is--------', s.getsockname()
 	print '\n\t--------the PEER to which we connected to is: --------', s.getpeername()
 	# 10 milliseconds
-	local_delay = 0.01
+	local_delay = 1
 	# internet_delay = 0.3
 	resend = 0
 	stay_under_max_delay = 0
@@ -144,8 +122,8 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 			
 			# if we resend over four times, stop increase waiting time or 
 			# terminate process
-			if local_delay > 0.16:
-				local_delay = 0.16
+			if local_delay > 16:
+				local_delay = 16
 				stay_under_max_delay += 1
 				if stay_under_max_delay > 3:
 					print "\n\t---------I think the server is down after %dth resend -_-!" % resend
@@ -165,7 +143,7 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 		# print message receiving from server	
 		else:
 			if resend <= 3:
-				local_delay = 0.01
+				local_delay = 1
 				print '\n\tGet reply before %d retries, now reset timeout to: %.2f seconds' % (resend, local_delay)
 				
 			# upon receive duplicate packet, needn't handle
