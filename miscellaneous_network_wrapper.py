@@ -51,7 +51,7 @@ for ipaddr in test_readable_ip:
 		%(Unpacked_ipaddr, len(Unpacked_ipaddr), hexlify(Packed_ipaddr), len(Packed_ipaddr))
 
 def query_MTU():
-	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) 
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) 
     s.connect(('192.168.3.113', 1060)) 
     
     while True:
