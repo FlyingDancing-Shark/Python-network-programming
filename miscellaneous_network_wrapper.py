@@ -50,5 +50,21 @@ for ipaddr in test_readable_ip:
 	print '\nIP: %s (length: %d bytes)  =====> (HEX notation) %s (length: %d bytes)'\
 		%(Unpacked_ipaddr, len(Unpacked_ipaddr), hexlify(Packed_ipaddr), len(Packed_ipaddr))
 
+def query_MTU():
+	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) 
+    s.connect(('192.168.3.113', 1060)) 
+    
+    while True:
+        mtu = 1500
+        try:
+            s.send('#' * mtu)
+        except socket.error, err:
+            print 'fail to send due to:  %s' % err
+            break
+        else:
+            mtu += 1
+            # print 'continue to find mtu !' 
+    
+    return mtu
 
 	
