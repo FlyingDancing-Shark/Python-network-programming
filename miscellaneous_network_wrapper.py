@@ -55,14 +55,14 @@ def query_MTU():
     s.connect(('192.168.3.113', 1060)) 
     mtu = 65500
     while True:
-    try:
-        s.send('#' * mtu)
-    except socket.error, err:
-        print 'fail to send due to:  %s' % err
-        print 'MTU is: %d' % mtu
-        break
-    else:
-        mtu += 1
+        try:
+            s.send('#' * mtu)
+        except socket.error, err:
+            print 'fail to send due to:  %s' % err
+            print 'MTU is: %d' % mtu
+            break
+        else:
+            mtu += 1
     
     return mtu
 
