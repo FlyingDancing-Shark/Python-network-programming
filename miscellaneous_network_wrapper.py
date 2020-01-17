@@ -55,7 +55,7 @@ def query_MTU():
     s.connect(('192.168.3.113', 1060)) 
     
     while True:
-    mtu = 1500
+    mtu = 65500
     try:
         s.send('#' * mtu)
     except socket.error, err:
