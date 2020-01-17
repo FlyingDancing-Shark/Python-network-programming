@@ -52,7 +52,7 @@ for ipaddr in test_readable_ip:
 
 def query_MTU():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) 
-    s.connect(('192.168.3.113', 53)) 
+    s.connect(('192.168.3.113', 1060)) 
     mtu = 65500
     while True:
         try:
