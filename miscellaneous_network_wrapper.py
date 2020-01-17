@@ -60,7 +60,7 @@ def query_MTU():
             s.send('#' * mtu)
         except socket.error, err:
             print 'fail to send due to:  %s' % err
-	        print 'MTU is: %d' % mtu
+	    print 'MTU is: %d' % mtu
             break
         else:
             mtu += 1
