@@ -67,4 +67,15 @@ def query_MTU():
     return (mtu - 1)
 
 
+ def check_sum(data):
+        chksum = 0
+        
+        # "i" count from 0 to len(data) - 1
+        for i in range(len(data)):
+            
+            # ord() compute an decimal value of a ASCII character 
+            chksum += ord(data[i:i+1])
+        return chksum
     
+   
+            
