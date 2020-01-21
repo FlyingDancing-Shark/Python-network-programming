@@ -173,5 +173,3 @@ else:
     sys.exit(2)
 	
 	
-
-    
