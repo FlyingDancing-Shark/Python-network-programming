@@ -43,26 +43,26 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 			print '\n\t---receive data from a suspicious host,  exit ----'
 			sys.exit(2)
 				
-	if random.randint(0, 1):
-            extracted_msg = client_request[:client_request.index('#')+1]
-            computed_chksum = check_sum(extracted_msg)
-            # check_sum() return integer, so we also need to convert its comparison party to integer
-            if computed_chksum == int(client_request[client_request.index('#')+1:]):
+		if random.randint(0, 1):
+            		extracted_msg = client_request[:client_request.index('#')+1]
+            		computed_chksum = check_sum(extracted_msg)
+            		# check_sum() return integer, so we also need to convert its comparison party to integer
+            		if computed_chksum == int(client_request[client_request.index('#')+1:]):
                 
-			    print '\n\treceive client message: ', repr(client_request)
-                rint "\n\t-----Original Checksum: %d match computed one: %d -----" %\
+			    	print '\n\treceive client message: ', repr(client_request)
+                		print "\n\t-----Original Checksum: %d match computed one: %d -----" %\
                                     (int(client_request[client_request.index('#')+1:], computed_chksum)
                                      
-			    reply_to_client = client_request[0:5] + "--------Server Reply--------"
-			    print '\n\tNow reply client: ', repr(reply_to_client)	
-			    s.sendto(reply_to_client, address)
+			    	reply_to_client = client_request[0:5] + "--------Server Reply--------"
+			    	print '\n\tNow reply client: ', repr(reply_to_client)	
+			    	s.sendto(reply_to_client, address)
                 
-            else:
-                print "\n\t-----Original Checksum: %d DIDN'T match computed one: %d -----" %\
+            		else:
+                		print "\n\t-----Original Checksum: %d DIDN'T match computed one: %d -----" %\
                                     (int(client_request[client_request.index('#')+1:], computed_chksum)
                                      
-                reply_to_client = "------Your packet might get corrupted, please resend the copy------"
-		        s.sendto(reply_to_client, address)
+                		reply_to_client = "------Your packet might get corrupted, please resend the copy------"
+		        	s.sendto(reply_to_client, address)
                                      
 		# if generate number 0, then simulate we dropped packet due to network 
 		# connectivity problem or congestion
