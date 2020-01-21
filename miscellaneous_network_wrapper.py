@@ -67,8 +67,8 @@ def query_MTU():
     return (mtu - 1)
 
 
- def check_sum(data):
-        chksum = 0
+def check_sum(data):
+	chksum = 0
         
         # "i" count from 0 to len(data) - 1
         for i in range(len(data)):
