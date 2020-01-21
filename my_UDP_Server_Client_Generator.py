@@ -7,6 +7,8 @@ algorithm of client mode.
 '''
 
 import random, socket, sys, time
+from miscellaneous_network_wrapper import query_MTU, check_sum
+
 
 MAX_RECV = 65535
 
@@ -42,12 +44,27 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 			sys.exit(2)
 				
 		if random.randint(0, 1):
-				
-			print '\n\treceive client message: ', repr(client_request)
-			reply_to_client = client_request[0:5] + "--------Server Reply--------"
-			print '\n\tNow reply client: ', repr(reply_to_client)	
-			s.sendto(reply_to_client, address)
-		
+            
+            extracted_msg = client_request[:client_request.index('#')+1]
+            computed_chksum = check_sum(extracted_msg)
+            # check_sum() return integer, so we also need to convert its comparison party to integer
+            if computed_chksum == int(client_request[client_request.index('#')+1:]):
+                
+			    print '\n\treceive client message: ', repr(client_request)
+                rint "\n\t-----Original Checksum: %d match computed one: %d -----" %\
+                                    (int(client_request[client_request.index('#')+1:], computed_chksum)
+                                     
+			    reply_to_client = client_request[0:5] + "--------Server Reply--------"
+			    print '\n\tNow reply client: ', repr(reply_to_client)	
+			    s.sendto(reply_to_client, address)
+                
+            else:
+                print "\n\t-----Original Checksum: %d DIDN'T match computed one: %d -----" %\
+                                    (int(client_request[client_request.index('#')+1:], computed_chksum)
+                                     
+                reply_to_client = "------Your packet might get corrupted, please resend the copy------"
+		        s.sendto(reply_to_client, address)
+                                     
 		# if generate number 0, then simulate we dropped packet due to network 
 		# connectivity problem or congestion
 		else:
@@ -78,30 +95,21 @@ elif (len(sys.argv) == 3) and (sys.argv[1] == 'client'):
 	seq_num = 0
 	previous_seq_num = 0 
 	
-	# because first time the server always respond us without timeout, 
-	# dropped or duplicated packet, so we can get packet successfully, 
-	# and store current request ID for later used
-	'''
-	seq_num = random.randint(10000, 99999)
 	
-	previous_seq_num = seq_num
-	msg = str(seq_num) + "--------NEW client message--------"
-	s.send(msg)
-	server_reply = s.recv(MAX_RECV)
-	print '\n\tThe server reply as: ', repr(server_reply)
-	'''
 	while True:
 		time.sleep(1)
 		
 		# when resend duplicate packet, using previously ID
 		if repeat:
-			duplicate_msg = str(previous_seq_num) + "--------DUPLICATED client message--------"
+			duplicate_string = str(previous_seq_num) + "--------DUPLICATED client message#"
+			duplicate_msg = duplicate_string + str(check_sum(duplicate_string))
 			s.send(duplicate_msg)
 			print '\n\tsend to server: ', duplicate_msg
 		else:
 			# when sending new packet, generate new ID
 			seq_num = random.randint(10000, 99999)
-			msg = str(seq_num) + "--------NEW client message--------"
+			string = str(seq_num) + "--------NEW client message#"
+			msg = string + str(check_sum(string))
 			s.send(msg)
 			print '\n\tsend to server: ', msg
 		
