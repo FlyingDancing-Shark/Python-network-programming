@@ -6,7 +6,7 @@ The server mode support simulate packet dropped in order to test the reliability
 algorithm of client mode.
 '''
 
-import random, socket, sys, time
+import random, sys, socket, time
 from miscellaneous_network_wrapper import query_MTU, check_sum
 
 
