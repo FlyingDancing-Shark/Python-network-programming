@@ -77,5 +77,4 @@ def query_MTU():
             chksum += ord(data[i:i+1])
         return chksum
     
-   
-            
+               
