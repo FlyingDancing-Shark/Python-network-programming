@@ -44,7 +44,6 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
 			sys.exit(2)
 				
 		if random.randint(0, 1):
-            
             extracted_msg = client_request[:client_request.index('#')+1]
             computed_chksum = check_sum(extracted_msg)
             # check_sum() return integer, so we also need to convert its comparison party to integer
