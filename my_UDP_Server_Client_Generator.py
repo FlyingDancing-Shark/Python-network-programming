@@ -59,7 +59,7 @@ if (2 <= len(sys.argv) <= 3) and (sys.argv[1] == 'server'):
                 
             		else:
                 		print "\n\t-----Original Checksum: %d DIDN'T match computed one: %d -----" %\
-                                    (int(client_request[client_request.index('#')+1:], computed_chksum)
+                                    (int(client_request[client_request.index('#')+1:], computed_chksum))
                                      
                 		reply_to_client = "------Your packet might get corrupted, please resend the copy------"
 		        	s.sendto(reply_to_client, address)
