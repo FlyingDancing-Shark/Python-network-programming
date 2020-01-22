@@ -6,7 +6,7 @@ query time from NTP server.....
 '''
 
 import socket
-# import random
+import random
 from binascii import hexlify
 
 test_readable_ip = ['192.168.0.1', '8.8.8.8', '255.255.255.0']
@@ -78,3 +78,16 @@ def check_sum(data):
         return chksum
     
                
+def gen_random64_bits():
+    
+    random_64bits = 0
+    for i in range(64):
+        if random.randint(0, 1):
+            random_64bits |= 1 << i
+    
+    print 'generated random 64 bit number with hexadecimal format:  %0xd' % random_64bits
+    print 'generated random 64 bit number with decimal format: %d' % random_64bits
+    return random_64bits
+    
+
+    
