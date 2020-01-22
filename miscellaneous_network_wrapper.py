@@ -78,17 +78,17 @@ def check_sum(data):
             chksum += ord(data[i:i+1])
         return chksum
     
-               
+ 
+# we can observe how a bit-wise OR operate on a 64-bit number in Python by uncomment those code lines below
 def gen_random64_bits():
-    
     random_64bits = 0
     for i in range(64):
-        time.sleep(3)
-        # if False, skip this pass, don't perform bit-wise OR, entering next iteration (with "i" added by 1 ) 
+		
+       #time.sleep(3)
         if random.randint(0, 1):
             random_64bits |= 1 << i
-    	print 'generated random 64 bit number with hexadecimal format:  %0xd' % random_64bits
-    	print 'generated random 64 bit number with decimal format: %d' % random_64bits
+       #print 'generated random 64 bit number with hexadecimal format:  %0xd' % random_64bits
+       #print 'generated random 64 bit number with decimal format: %d' % random_64bits
 	
     print 'generated random 64 bit number with hexadecimal format:  %0xd' % random_64bits
     print 'generated random 64 bit number with decimal format: %d' % random_64bits
