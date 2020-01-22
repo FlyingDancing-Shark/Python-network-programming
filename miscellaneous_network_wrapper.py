@@ -5,9 +5,10 @@ packed, fixed 4-bytes length hexadecimal notation strings (vice versa),
 query time from NTP server.....
 '''
 
-import socket
-import random
 from binascii import hexlify
+import random
+import socket
+import time
 
 test_readable_ip = ['192.168.0.1', '8.8.8.8', '255.255.255.0']
 test_server_name = 'www.facebook.com'
