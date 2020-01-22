@@ -82,6 +82,8 @@ def gen_random64_bits():
     
     random_64bits = 0
     for i in range(64):
+        
+        # if False, skip this pass, don't perform bit-wise OR, entering next iteration (with "i" added by 1 ) 
         if random.randint(0, 1):
             random_64bits |= 1 << i
     
