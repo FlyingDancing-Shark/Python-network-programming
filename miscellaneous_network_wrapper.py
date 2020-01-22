@@ -84,7 +84,7 @@ def gen_random64_bits():
     random_64bits = 0
     for i in range(64):
 		
-       #time.sleep(3)
+       #time.sleep(1)
         if random.randint(0, 1):
             random_64bits |= 1 << i
        #print 'generated random 64 bit number with hexadecimal format:  %0xd' % random_64bits
