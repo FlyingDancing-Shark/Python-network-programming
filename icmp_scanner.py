@@ -8,9 +8,14 @@ import os
 import socket
 import sys
 import struct
+import threading
+import time
+from netaddr import IPNetwork, IPAddress
 
-host_address =  "192.168.3.113"
 
+listen_address =  "192.168.3.113"
+scan_subnet = "192.168.3.0/24"
+magic_message = "SHAYI1983"
 
 class IP_hdr(Structure):
 
@@ -59,6 +64,17 @@ class ICMP_hdr(Structure):
 
 ###################### END OF CLASS ICMP_hdr definition ###########################
 
+def udp_sender(subnet, magic_string):
+
+    time.sleep(5)
+    sender = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+    for ip in IPNetwork(subnet):
+        try:
+            sender.sendto(magic_string, ("%s" % ip,65212))
+        except:
+            pass
+###################### END OF udp_sender definition ###################
 
 if os.name == 'nt':
     socket_protocol = socket.IPPROTO_IP
@@ -73,6 +89,10 @@ if os.name == 'nt':
     sniffer.ioctl(socket.SIO_RCVALL, socket.RCVALL_ON)
     print "\n\tturn ON promiscuous mode of network adapter....."
 
+worker_thread = threading.Thread(target=udp_sender, args=(subnet, magic_string))
+worker_thread.start()
+
+
 try:
 
     while True:
@@ -83,11 +103,14 @@ try:
 
         if  ip_header.protocol == "ICMP":
             offset = ip_header.ihl * 4
-
             icmp_packet = raw_packet[offset:offset + sizeof(ICMP_hdr)]
             icmp_header = ICMP_hdr(icmp_packet)
-            print "ICMP -> Type: %d \n\tCode: %d\n\tchecksum: %d\n\tNext Hop MTU: %d\n\t"\
-                  % (icmp_header.type, icmp_header.code, icmp_header.checksum, icmp_header.next_hop_mtu)
+
+            if icmp_header.code == 3 and icmp_header.type == 3:
+                if IPAddress(ip_header.src_address) in IPNetwork(scan_subnet):
+                    if raw_packet[len(raw_packet) - len(magic_message):] == magic_message:
+                        print "Host UP !!! ---> %s" % ip_header.src_address
+
 
 except KeyboardInterrupt:
     if os.name == "nt":
