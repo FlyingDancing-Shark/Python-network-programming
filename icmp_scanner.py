@@ -69,6 +69,9 @@ class ICMP_hdr(Structure):
 
 def udp_sender(subnet, magic_string):
 
+    # this guarantee that the worker thread won't emit host detection packets too 
+    # fast that main sniffer thread can't display to user with each alive host 
+    # in a timely manner.
     time.sleep(5)
     sender = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -120,3 +123,5 @@ except KeyboardInterrupt:
         sniffer.ioctl(socket.SIO_RCVALL, socket.RCVALL_OFF)
         print "\n\tturn OFF promiscuous mode of network adapter....."
     sys.exit(0)
+    
+    
