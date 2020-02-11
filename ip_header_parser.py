@@ -39,7 +39,29 @@ class IP_hdr(Structure):
         except:
             self.protocol = str(self.protocol_num)
 
-###################### END OF CLASS IP_hdr #################################
+###################### END OF CLASS IP_hdr definition #############################
+
+class ICMP_hdr(Structure):
+
+    _fields_ = [
+        ("type",            c_ubyte),
+        ("code",            c_ubyte),
+        ("checksum",        c_ushort),
+        ("unused",          c_ushort),
+        ("next_hop_mtu",    c_ushort)
+    ]
+
+
+    def __new__(self, socket_buffer):
+        return self.from_buffer_copy(socket_buffer)
+
+    # this line can NOT be omitted, otherwise,
+    # we can't instantiated an ICMP header object!
+    def __init__(self, socket_buffer):
+        pass
+
+###################### END OF CLASS ICMP_hdr definition ###########################
+
 
 if os.name == 'nt':
     socket_protocol = socket.IPPROTO_IP
@@ -61,6 +83,14 @@ try:
         raw_packet = sniffer.recvfrom(65535)[0]
         ip_header = IP_hdr(raw_packet[0:20])
         print "Protocol: %s %s ---> %s" % (ip_header.protocol, ip_header.src_address, ip_header.dst_address)
+
+        if  ip_header.protocol == "ICMP":
+            offset = ip_header.ihl * 4
+
+            icmp_packet = raw_packet[offset:offset + sizeof(ICMP_hdr)]
+            icmp_header = ICMP_hdr(icmp_packet)
+            print "ICMP -> Type: %d \n\tCode: %d\n\tchecksum: %d\n\tNext Hop MTU: %d\n\t"\
+                  % (icmp_header.type, icmp_header.code, icmp_header.checksum, icmp_header.next_hop_mtu)
 
 except KeyboardInterrupt:
     if os.name == "nt":
