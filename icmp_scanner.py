@@ -92,7 +92,7 @@ if os.name == 'nt':
     sniffer.ioctl(socket.SIO_RCVALL, socket.RCVALL_ON)
     print "\n\tturn ON promiscuous mode of network adapter....."
 
-worker_thread = threading.Thread(target=udp_sender, args=(subnet, magic_string))
+worker_thread = threading.Thread(target=udp_sender, args=(scan_subnet, magic_message))
 worker_thread.start()
 
 
