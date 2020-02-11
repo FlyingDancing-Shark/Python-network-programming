@@ -19,6 +19,7 @@ listen_address =  "192.168.3.113"
 scan_subnet = "192.168.3.0/24"
 magic_message = "SHAYI1983"
 
+
 class IP_hdr(Structure):
 
     _fields_ = [
