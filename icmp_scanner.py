@@ -105,7 +105,7 @@ try:
 
         raw_packet = sniffer.recvfrom(65535)[0]
         ip_header = IP_hdr(raw_packet[0:20])
-        print "Protocol: %s %s ---> %s" % (ip_header.protocol, ip_header.src_address, ip_header.dst_address)
+        # print "Protocol: %s %s ---> %s" % (ip_header.protocol, ip_header.src_address, ip_header.dst_address)
 
         if  ip_header.protocol == "ICMP":
             offset = ip_header.ihl * 4
